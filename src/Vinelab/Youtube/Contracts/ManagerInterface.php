@@ -19,8 +19,8 @@ interface ManagerInterface {
 
     /**
      * Sync a resource (channel or video)
-     * @param  Channel|Video $resource 
+     * @param  ResourceInterface $resource 
      * @return Channel|Video           
      */
-    public function sync($resource);
+    public function sync(\ResourceInterface $resource);
 }
