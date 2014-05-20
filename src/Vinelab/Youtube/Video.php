@@ -1,8 +1,9 @@
 <?php namespace Vinelab\Youtube;
 
+use Vinelab\Youtube\ResourceInterface;
 use Vinelab\Youtube\Contracts\VideoInterface;
 
-class Video implements VideoInterface {
+class Video implements VideoInterface, ResourceInterface {
 
     /**
      * istantiate an instance of this class
@@ -87,5 +88,14 @@ class Video implements VideoInterface {
         }
 
         return $thumbs;
+    }
+
+    /**
+     * Return the Video data
+     * @return array 
+     */
+    public function getYoutubeInfo()
+    {
+        return (array)$this;
     }
 }
