@@ -59,16 +59,16 @@ class Synchronizer implements SynchronizerInterface {
         $url = $resource->url();
 
         // sync channels: Vinelab\Youtube\Channel
-        if($resource instanceof Channel)
+        if($resource instanceof YoutubeChannelInterface)
         {
             $synced_at = new \DateTime($resource->synced_at);
             $synced_at = $synced_at->format('Y-m-d\TH:i:sP');
 
-            $response = $this->api->channel($resource->id, $synced_at);
+            $response = $this->api->channel($resource->id(), $synced_at);
             
             if(count($response->items) == 0)
             {
-                $response = $this->api->channel($resource->id);
+                $response = $this->api->channel($resource->id());
             }
             //check if sync is enabled for a channel
             if($this->syncable($resource))
@@ -80,7 +80,7 @@ class Synchronizer implements SynchronizerInterface {
             $this->syncVideos($resource, $response);
 
             // sync single videos: Vinelab\Youtube\Video
-        } else if($resource instanceof Video)
+        } else if($resource instanceof VideoInterface)
         {
             $response = $this->api->video($url);
             //check if sync if enabled for a video

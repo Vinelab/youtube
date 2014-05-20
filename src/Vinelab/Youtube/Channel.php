@@ -197,4 +197,13 @@ class Channel implements ChannelInterface, ResourceInterface {
     {
         return $this->data;
     }
+
+    /**
+     * return the channel id
+     * @return integer 
+     */
+    public function id()
+    {
+        return $this->data['id'];
+    }
 }
