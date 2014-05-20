@@ -61,6 +61,10 @@ class Api implements ApiInterface {
      */
     protected $search_validator;
 
+    /**
+     * The HttpClient instance
+     * @var Vinelab\Http\Client
+     */
     protected $http_client;
 
     /**
@@ -191,10 +195,12 @@ class Api implements ApiInterface {
     {
         $channel = $this->getChannelById($id_or_name);
 
-        if(empty($channel->items))
+        if($this->isEmpty($channel->items))
         {
             $channel = $this->getChannelByName($id_or_name);
         }
+        //validate the channel info
+        $this->channel_validator->validate($channel);
 
         $channel_id = $channel->items[0]->id;
         //get the channel videos
@@ -249,6 +255,16 @@ class Api implements ApiInterface {
         $result = $this->get($api_url, $params);
         $this->channel_validator->validate($result);
         return $result;
+    }
+
+    /**
+     * check if items is empty
+     * @param  array  $items
+     * @return boolean
+     */
+    protected function isEmpty($items)
+    {
+        return empty($items);
     }
 
     /**
