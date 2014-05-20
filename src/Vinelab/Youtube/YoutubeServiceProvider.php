@@ -29,7 +29,12 @@ class YoutubeServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->app->bind('Vinelab\Youtube\Contracts\ApiInterface', function(){
-            return new Api(App::make('config'));
+            return new Api(App::make('config'), 
+                           App::make('Vinelab\Youtube\Contracts\VideoInterface'),
+                           App::make('Vinelab\Youtube\Contracts\ParserInterface'),
+                           App::make('Vinelab\Youtube\Validators\VideoResponseValidator'),
+                           App::make('Vinelab\Youtube\Validators\ChannelResponseValidator'),
+                           App::make('Vinelab\Youtube\Validators\SearchResponseValidator'));
         });
 
         $this->app->bind('Vinelab\Youtube\Validators\VideoValidator', function(){
@@ -56,11 +61,6 @@ class YoutubeServiceProvider extends ServiceProvider {
         $this->app->bind('Vinelab\Youtube\Contracts\ManagerInterface', function(){
             return new Manager(
                 App::make('Vinelab\Youtube\Contracts\ApiInterface'), 
-                App::make('Vinelab\Youtube\Contracts\VideoInterface'),
-                App::make('Vinelab\Youtube\Contracts\ParserInterface'),
-                App::make('Vinelab\Youtube\Validators\VideoResponseValidator'),
-                App::make('Vinelab\Youtube\Validators\ChannelResponseValidator'),
-                App::make('Vinelab\Youtube\Validators\SearchResponseValidator'),
                 App::make('Vinelab\Youtube\Contracts\SynchronizerInterface'));
         });
 
