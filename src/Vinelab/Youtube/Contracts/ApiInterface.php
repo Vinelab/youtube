@@ -17,6 +17,14 @@ interface ApiInterface {
      */
     public function video($video_id);
 
+    /** 
+     * return the channel info by id or by name
+     * @param  string $id_or_name 
+     * @param  date $synced_at 
+     * @return Vinelab\Youtube\Channel
+     */
+    public function channel($id_or_name, $synced_at=null);
+
     /**
      * get the channel by ID
      * @param  string $username 
