@@ -33,7 +33,8 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * Create a new instance of the VideoSynchroniser
-     * @param VideoManagerInterface $manager
+     * @param ApiInterface            $api     
+     * @param YoutubeChannelInterface $channel 
      */
     public function __construct(ApiInterface $api, YoutubeChannelInterface $channel)
     {
@@ -58,15 +59,16 @@ class Synchronizer implements SynchronizerInterface {
         $url = $resource->url();
 
         // sync channels: Vinelab\Youtube\Channel
-        if($this->typeOf($resource) == 'Najem\Artists\Channel')
+        if($resource instanceof Channel)
         {
             $synced_at = new \DateTime($resource->synced_at);
             $synced_at = $synced_at->format('Y-m-d\TH:i:sP');
 
-            $response = $this->api->channel($resource->channel_id, $synced_at);
+            $response = $this->api->channel($resource->id, $synced_at);
+            
             if(count($response->items) == 0)
             {
-                $response = $this->api->channel($resource->channel_id);
+                $response = $this->api->channel($resource->id);
             }
             //check if sync is enabled for a channel
             if($this->syncable($resource))
@@ -78,7 +80,7 @@ class Synchronizer implements SynchronizerInterface {
             $this->syncVideos($resource, $response);
 
             // sync single videos: Vinelab\Youtube\Video
-        } else if($this->typeOf($resource) == 'Najem\Artists\Video')
+        } else if($resource instanceof Video)
         {
             $response = $this->api->video($url);
             //check if sync if enabled for a video
@@ -214,15 +216,4 @@ class Synchronizer implements SynchronizerInterface {
     {
         return $data->sync_enabled;
     }
-
-    /**
-     * return the type of object
-     * @param  Object $object
-     * @return string
-     */
-    protected function typeOf($object)
-    {
-        return (isset($object)) ? get_class($object) : null;
-    }
-
 }
