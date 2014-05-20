@@ -191,12 +191,10 @@ class Api implements ApiInterface {
     {
         $channel = $this->getChannelById($id_or_name);
 
-        if($this->isEmpty($channel->items))
+        if(empty($channel->items))
         {
             $channel = $this->getChannelByName($id_or_name);
         }
-        //validate the channel info
-        $this->channel_validator->validate($channel);
 
         $channel_id = $channel->items[0]->id;
         //get the channel videos
@@ -225,7 +223,9 @@ class Api implements ApiInterface {
         ];
 
         //make the api call
-        return $this->get($api_url, $params);
+        $result = $this->get($api_url, $params);
+        $this->channel_validator->validate($result);
+        return $result;
     }
 
     /**
@@ -246,17 +246,9 @@ class Api implements ApiInterface {
         ];
 
         //make the api call
-        return $this->get($api_url, $params);
-    }
-
-    /**
-     * check if items is empty
-     * @param  array  $items
-     * @return boolean
-     */
-    protected function isEmpty($items)
-    {
-        return empty($items);
+        $result = $this->get($api_url, $params);
+        $this->channel_validator->validate($result);
+        return $result;
     }
 
     /**
