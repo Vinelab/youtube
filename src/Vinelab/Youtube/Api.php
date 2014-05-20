@@ -195,7 +195,7 @@ class Api implements ApiInterface {
     {
         $channel = $this->getChannelById($id_or_name);
 
-        if($this->isEmpty($channel->items))
+        if(empty($channel->items))
         {
             $channel = $this->getChannelByName($id_or_name);
         }
@@ -257,15 +257,6 @@ class Api implements ApiInterface {
         return $result;
     }
 
-    /**
-     * check if items is empty
-     * @param  array  $items
-     * @return boolean
-     */
-    protected function isEmpty($items)
-    {
-        return empty($items);
-    }
 
     /**
      * Make the api call
