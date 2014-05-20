@@ -29,7 +29,8 @@ class YoutubeServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->app->bind('Vinelab\Youtube\Contracts\ApiInterface', function(){
-            return new Api(App::make('config'), 
+            return new Api(App::make('config'),
+                           App::make('Vinelab\Http\Client'), 
                            App::make('Vinelab\Youtube\Contracts\VideoInterface'),
                            App::make('Vinelab\Youtube\Contracts\ParserInterface'),
                            App::make('Vinelab\Youtube\Validators\VideoResponseValidator'),

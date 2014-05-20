@@ -1,6 +1,7 @@
 <?php namespace Vinelab\Youtube;
 
 use HttpClient;
+use Vinelab\Http\Client;
 use Vinelab\Youtube\VideoCollection;
 use Illuminate\Config\Repository as Config;
 use Vinelab\Youtube\Contracts\ApiInterface;
@@ -60,11 +61,14 @@ class Api implements ApiInterface {
      */
     protected $search_validator;
 
+    protected $http_client;
+
     /**
      * Initialize the Youtube instance
      * @param Config $config
      */
     public function __construct(Config $config,
+                                Client $http_client,
                                 YoutubeVideoInterface $video,
                                 ParserInterface $parser,
                                 VideoResponseValidator $video_validator,
@@ -72,6 +76,7 @@ class Api implements ApiInterface {
                                 SearchResponseValidator $search_validator)
     {
         $this->config   = $config;
+        $this->http_client = $http_client;
         $configuration  = $this->config->get('Vinelab\Youtube::youtube');
 
         $this->key      = $configuration['key'];
@@ -262,7 +267,7 @@ class Api implements ApiInterface {
      */
     public function get($url, $params)
     {
-        $result = HttpClient::get(compact('url', 'params'));
+        $result = $this->http_client->get(compact('url', 'params'));
         return $result->json();
     }
 }
