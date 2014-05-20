@@ -1,6 +1,8 @@
 <?php namespace Vinelab\Youtube;
 
 use Vinelab\Youtube\VideoCollection;
+use Vinelab\Youtube\ChannelInterface;
+use Vinelab\Youtube\VideoInterface;
 use Vinelab\Youtube\ResourceInterface;
 use Vinelab\Youtube\Contracts\ApiInterface;
 use Vinelab\Youtube\Contracts\ChannelInterface as YoutubeChannelInterface;
@@ -59,7 +61,7 @@ class Synchronizer implements SynchronizerInterface {
         $url = $resource->url();
 
         // sync channels: Vinelab\Youtube\Channel
-        if($resource instanceof YoutubeChannelInterface)
+        if($resource instanceof ResourceInterface)
         {
             $synced_at = new \DateTime($resource->synced_at);
             $synced_at = $synced_at->format('Y-m-d\TH:i:sP');
