@@ -1,13 +1,21 @@
 <?php namespace Vinelab\Youtube;
 
 use Vinelab\Youtube\VideoCollection;
-use Vinelab\Youtube\Contracts\ChannelInterface;
+use Vinelab\Youtube\ResourceInterface;
+use Vinelab\Youtube\Contracts\ApiInterface;
+use Vinelab\Youtube\Contracts\ChannelInterface as YoutubeChannelInterface;
 use Vinelab\Youtube\Contracts\VideoManagerInterface;
 use Vinelab\Youtube\Contracts\SynchronizerInterface;
 use Vinelab\Youtube\Contracts\YoutubeParserInterface;
 use Vinelab\Youtube\Exceptions\IncompatibleParametersException;
- 
+
 class Synchronizer implements SynchronizerInterface {
+
+    /**
+     * The api instance.
+     * @var Vinelab\Youtube\Contracts\ApiInterface
+     */
+    protected $api;
 
     /**
      * $the ChannelInterface instance
@@ -17,7 +25,7 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * $data will store all the data
-     * after we sync the channels and 
+     * after we sync the channels and
      * videos.
      * @var array
      */
@@ -25,32 +33,42 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * Create a new instance of the VideoSynchroniser
-     * @param VideoManagerInterface $manager 
+     * @param VideoManagerInterface $manager
      */
-    public function __construct(ChannelInterface $channel)
+    public function __construct(ApiInterface $api, YoutubeChannelInterface $channel)
     {
+        $this->api = $api;
         $this->channel  = $channel;
     }
 
-   /**
-    * Sync the resources.
-    * 
-    * in case a resource(video, or channel) has been been deleted
-    * a 'IncompatibleParametersException' will be thrown
-    * which means that the existing data and the new one are not 
-    * compatible(different kind) because if the resource has been deleted
-    * Null will be returned in the response.
-    * 
-    * @param  Channel|Video $existing_data 
-    * @param  Channel|Video $new_data      
-    * @return Channel|Video
-    */
-    public function sync($resource, $response)
-    {   
+    /**
+     * Sync the resources.
+     *
+     * in case a resource(video, or channel) has been been deleted
+     * a 'IncompatibleParametersException' will be thrown
+     * which means that the existing data and the new one are not
+     * compatible(different kind) because if the resource has been deleted
+     * Null will be returned in the response.
+     *
+     * @param  ResourceInterface $existing_data
+     * @return Channel|Video
+     */
+    public function sync($resource)
+    {
+        $url = $resource->url();
+
         // sync channels: Vinelab\Youtube\Channel
-        if($resource instanceof Channel and $response instanceof Channel)
+        if($this->typeOf($resource) == 'Najem\Artists\Channel')
         {
-            //check if sync isg enabled for a channel
+            $synced_at = new \DateTime($resource->synced_at);
+            $synced_at = $synced_at->format('Y-m-d\TH:i:sP');
+
+            $response = $this->api->channel($resource->channel_id, $synced_at);
+            if(count($response->items) == 0)
+            {
+                $response = $this->api->channel($resource->channel_id);
+            }
+            //check if sync is enabled for a channel
             if($this->syncable($resource))
             {
                 //Sync the channel with the new data
@@ -58,10 +76,11 @@ class Synchronizer implements SynchronizerInterface {
             }
             //sync the video if changed
             $this->syncVideos($resource, $response);
-            
-        // sync single videos: Vinelab\Youtube\Video
-        } else if($resource instanceof Video and $response instanceof Video)
+
+            // sync single videos: Vinelab\Youtube\Video
+        } else if($this->typeOf($resource) == 'Najem\Artists\Video')
         {
+            $response = $this->api->video($url);
             //check if sync if enabled for a video
             if($this->syncable($resource))
             {
@@ -87,12 +106,12 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * check if the video etags are different.
-     * @param  Vinelab\Youtube\Video $resource 
-     * @param  Vinelab\Youtube\Video $response      
-     * @return Boolean              
+     * @param  Vinelab\Youtube\Video $resource
+     * @param  Vinelab\Youtube\Video $response
+     * @return Boolean
      */
     protected function videoDiff($resource, $response)
-    {   
+    {
         //if the etag is different and if sync is enabled.
         //then return the new video info.
         if($resource->etag != $response->etag)
@@ -115,14 +134,14 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * Sync the video inside the channel
-     * @param  Channel $resource 
+     * @param  Channel $resource
      * @param  Channel $response
      */
     protected function syncVideos($resource, $response)
     {
         $resource_videos = $resource->videos;
         $old_etags = $resource_videos->lists('etag');
-   
+
         $response_videos = $response->videos;
         $new_etags = $response_videos->lists('etag');
 
@@ -130,11 +149,11 @@ class Synchronizer implements SynchronizerInterface {
         $intersect = array_intersect($new_etags, $old_etags);
 
         //this should be added to the etags array
-        $added_etags = array_diff($new_etags, $old_etags); 
+        $added_etags = array_diff($new_etags, $old_etags);
 
         //these must not exist in the etags array
         $deleted_etags = array_diff($old_etags, $new_etags);
-        
+
         //this contains the etags for all the videos that should exist in the final album
         $etags = array_merge($intersect, $added_etags);
 
@@ -144,7 +163,7 @@ class Synchronizer implements SynchronizerInterface {
         //add all the video from the existing channel (assuming that it should exist in the final channel)
         //to the Video collection (that will contain the final video result)
         foreach($resource->videos as $video)
-        {   
+        {
             //if sync is not enabled don't add the video
             if($this->syncable($video))
             {
@@ -165,9 +184,9 @@ class Synchronizer implements SynchronizerInterface {
         //add any video that still exist and to be added to the final video collection.
         //use the newly fetched channel
         if( ! empty($etags))
-        {  
+        {
             foreach($response->videos as $video)
-            {   
+            {
                 //if sync is not enabled don't add the video
                 if($this->syncable($video))
                 {
@@ -188,12 +207,22 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * return the value of sync_enabled
-     * @param  Channel|Video $data 
-     * @return boolean       
+     * @param  Channel|Video $data
+     * @return boolean
      */
     protected function syncable($data)
     {
         return $data->sync_enabled;
+    }
+
+    /**
+     * return the type of object
+     * @param  Object $object
+     * @return string
+     */
+    protected function typeOf($object)
+    {
+        return (isset($object)) ? get_class($object) : null;
     }
 
 }
