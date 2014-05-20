@@ -35,8 +35,8 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * Create a new instance of the VideoSynchroniser
-     * @param ApiInterface            $api     
-     * @param YoutubeChannelInterface $channel 
+     * @param ApiInterface            $api
+     * @param YoutubeChannelInterface $channel
      */
     public function __construct(ApiInterface $api, YoutubeChannelInterface $channel)
     {
@@ -61,13 +61,13 @@ class Synchronizer implements SynchronizerInterface {
         $url = $resource->url();
 
         // sync channels: Vinelab\Youtube\Channel
-        if($resource instanceof ResourceInterface)
+        if($resource instanceof ChannelInterface)
         {
             $synced_at = new \DateTime($resource->synced_at);
             $synced_at = $synced_at->format('Y-m-d\TH:i:sP');
 
             $response = $this->api->channel($resource->id(), $synced_at);
-            
+
             if(count($response->items) == 0)
             {
                 $response = $this->api->channel($resource->id());
