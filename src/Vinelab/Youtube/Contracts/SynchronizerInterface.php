@@ -11,9 +11,8 @@ interface SynchronizerInterface {
     * compatible(different kind) because if the resource has been deleted
     * Null will be returned in the response.
     * 
-    * @param  Channel|Video $resource      
-    * @param  Channel|Video $response      
+    * @param  Channel|Video $resource          
     * @return Channel|Video
     */
-    public function sync($resource, $response);
+    public function sync($resource);
 }

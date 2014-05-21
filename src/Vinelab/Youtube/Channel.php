@@ -1,9 +1,10 @@
 <?php namespace Vinelab\Youtube;
 
 use Vinelab\Youtube\VideoCollection;
+use Vinelab\Youtube\ResourceInterface;
 use Vinelab\Youtube\Contracts\ChannelInterface;
 
-class Channel implements ChannelInterface {
+class Channel implements ChannelInterface, ResourceInterface {
 
     /**
      * The Channel Data
@@ -186,5 +187,23 @@ class Channel implements ChannelInterface {
     public function __get($name)
     {
         return  ( isset($this->data[$name]) ) ? $this->data[$name] : null;
+    }
+
+    /**
+     * Return the Channel data
+     * @return array 
+     */
+    public function getYoutubeInfo()
+    {
+        return $this->data;
+    }
+
+    /**
+     * return the channel id
+     * @return integer 
+     */
+    public function id()
+    {
+        return $this->data['id'];
     }
 }
