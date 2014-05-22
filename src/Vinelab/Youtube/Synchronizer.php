@@ -66,11 +66,11 @@ class Synchronizer implements SynchronizerInterface {
             $synced_at = new \DateTime($resource->synced_at);
             $synced_at = $synced_at->format('Y-m-d\TH:i:sP');
 
-            $response = $this->api->channel($resource->id(), $synced_at);
+            $response = $this->api->channel($resource->getYoutubeId(), $synced_at);
 
             if(count($response->items) == 0)
             {
-                $response = $this->api->channel($resource->id());
+                $response = $this->api->channel($resource->getYoutubeId());
             }
             //check if sync is enabled for a channel
             if($this->syncable($resource))
@@ -217,5 +217,14 @@ class Synchronizer implements SynchronizerInterface {
     protected function syncable($data)
     {
         return $data->sync_enabled;
+    }
+
+    /**
+     * return the youtube channel if
+     * @return interger 
+     */
+    public function getYoutubeId()
+    {
+        return $this->data['id'];
     }
 }
