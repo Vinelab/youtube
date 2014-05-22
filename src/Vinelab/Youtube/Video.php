@@ -98,4 +98,9 @@ class Video implements VideoInterface, ResourceInterface {
     {
         return (array)$this;
     }
+
+    public function youtubeSyncedAt()
+    {
+        return $this->synced_at;
+    }
 }

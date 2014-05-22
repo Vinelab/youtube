@@ -206,4 +206,9 @@ class Channel implements ChannelInterface, ResourceInterface {
     {
         return $this->data['id'];
     }
+
+    public function youtubeSyncedAt()
+    {
+        return $this->data['synced_at'];
+    }
 }
