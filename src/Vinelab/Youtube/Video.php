@@ -99,8 +99,21 @@ class Video implements VideoInterface, ResourceInterface {
         return (array)$this;
     }
 
+    /**
+     * return the synced at date
+     * @return date 
+     */
     public function youtubeSyncedAt()
     {
         return $this->synced_at;
+    }
+
+    /**
+     * return the published at video date
+     * @return date
+     */
+    public function youtubePublishedAt()
+    {
+        return $this->snippet['publishedAt'];
     }
 }
