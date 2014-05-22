@@ -83,4 +83,23 @@ class Manager implements ManagerInterface {
         return (isset($object)) ? get_class($object) : null;
     }
 
+
+    /**
+     * add http to the url if it does not exist.
+     *
+     * @param $url
+     *
+     * @return string
+     */
+    public function prepareUrl($url)
+    {
+        if (!preg_match('/http[s]?:\/\//', $url, $matches)) {
+            $url = 'http://' . $url;
+
+            return $url;
+        }
+
+        return $url;
+    }
+
 }
