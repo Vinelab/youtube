@@ -23,4 +23,14 @@ interface ManagerInterface {
      * @return Channel|Video           
      */
     public function sync(\ResourceInterface $resource);
+
+    /**
+     * add http to the url if it does not exist.
+     *
+     * @param $url
+     *
+     * @return string
+     */
+    public function prepareUrl($url);
+
 }

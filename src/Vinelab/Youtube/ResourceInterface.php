@@ -6,4 +6,10 @@ interface ResourceInterface {
      * @return array
      */
     public function getYoutubeInfo();
+
+    /**
+     * Return the youtube synced_at value
+     * @return date 
+     */
+    public function youtubeSyncedAt();
 }

@@ -50,4 +50,16 @@ class Youtube implements YoutubeInterface {
     {
         return $this->manager->sync($resource);
     }
+
+    /**
+     * add http to the url if it does not exist.
+     *
+     * @param $url
+     *
+     * @return string
+     */
+    public function prepareUrl($url)
+    {
+        return $this->manager->prepareUrl($url);
+    }
 }
