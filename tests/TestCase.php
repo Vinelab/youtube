@@ -1,9 +1,6 @@
 <?php namespace Vinelab\Youtube\Tests;
 
-class TestCase extends \Orchestra\Testbench\TestCase {
+class TestCase extends \PHPUnit_Framework_TestCase {
 
-    protected function getPackageProviders()
-    {
-        return array('Vinelab\Youtube\YoutubeServiceProvider');
-    }
+
 }
