@@ -2,4 +2,4 @@
 
 use Vinelab\Youtube\ResourceInterface;
 
-interface VideoInterface extends ResourceInterface {}
+interface YoutubeVideoInterface extends ResourceInterface {}
