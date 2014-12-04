@@ -1,11 +1,11 @@
 <?php namespace Vinelab\Youtube;
 
 use Vinelab\Youtube\VideoCollection;
-use Vinelab\Youtube\ChannelInterface;
+use Vinelab\Youtube\YoutubeChannelInterface;
 use Vinelab\Youtube\VideoInterface;
 use Vinelab\Youtube\ResourceInterface;
 use Vinelab\Youtube\Contracts\ApiInterface;
-use Vinelab\Youtube\Contracts\ChannelInterface as YoutubeChannelInterface;
+use Vinelab\Youtube\Contracts\ChannelInterface;
 use Vinelab\Youtube\Contracts\VideoManagerInterface;
 use Vinelab\Youtube\Contracts\SynchronizerInterface;
 use Vinelab\Youtube\Contracts\YoutubeParserInterface;
@@ -20,8 +20,8 @@ class Synchronizer implements SynchronizerInterface {
     protected $api;
 
     /**
-     * $the ChannelInterface instance
-     * @var Vinelab\Youtube\Contracts\ChannelInterface
+     * $the YoutubeChannelInterface instance
+     * @var Vinelab\Youtube\Contracts\YoutubeChannelInterface
      */
     protected $channel;
 
@@ -36,9 +36,9 @@ class Synchronizer implements SynchronizerInterface {
     /**
      * Create a new instance of the VideoSynchroniser
      * @param ApiInterface            $api
-     * @param YoutubeChannelInterface $channel
+     * @param ChannelInterface $channel
      */
-    public function __construct(ApiInterface $api, YoutubeChannelInterface $channel)
+    public function __construct(ApiInterface $api, ChannelInterface $channel)
     {
         $this->api = $api;
         $this->channel  = $channel;
@@ -61,7 +61,7 @@ class Synchronizer implements SynchronizerInterface {
         $url = $resource->url();
 
         // sync channels: Vinelab\Youtube\Channel
-        if($resource instanceof ChannelInterface)
+        if($resource instanceof YoutubeChannelInterface)
         {
             $synced_at = new \DateTime($resource->synced_at);
             $synced_at = $synced_at->format('Y-m-d\TH:i:sP');
@@ -221,7 +221,7 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * return the youtube channel if
-     * @return interger 
+     * @return interger
      */
     public function getYoutubeId()
     {

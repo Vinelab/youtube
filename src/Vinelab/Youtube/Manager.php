@@ -5,6 +5,7 @@ use Vinelab\Youtube\Contracts\ManagerInterface;
 use Vinelab\Youtube\ResourceInterface;
 use Vinelab\Youtube\Contracts\SynchronizerInterface;
 use Vinelab\Youtube\Helpers\YoutubeUrlParser as UrlParser;
+
 class Manager implements ManagerInterface {
 
     /**

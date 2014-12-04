@@ -12,6 +12,7 @@ class Video implements VideoInterface, ResourceInterface {
      */
     public function make( $response )
     {
+
         $video = new static;
 
         if($response->kind == "youtube#searchResult")
@@ -32,6 +33,7 @@ class Video implements VideoInterface, ResourceInterface {
      */
     public function fill( $data )
     {
+
         $this->kind         = $data['kind'];
         $this->id           = $data['id'];
         $this->etag         = $data['etag'];
@@ -53,6 +55,7 @@ class Video implements VideoInterface, ResourceInterface {
      */
     public function fillFromSearch( $data )
     {
+        var_dump($data['id']);
         $this->kind         = $data['id']->kind;
         $this->id           = $data['id']->videoId;
         $this->etag         = $data['etag'];

@@ -5,7 +5,7 @@ use Vinelab\Http\Client;
 use Vinelab\Youtube\VideoCollection;
 use Illuminate\Config\Repository as Config;
 use Vinelab\Youtube\Contracts\ApiInterface;
-use Vinelab\Youtube\Contracts\VideoInterface as YoutubeVideoInterface;
+use Vinelab\Youtube\Contracts\VideoInterface;
 use Vinelab\Youtube\Contracts\ParserInterface;
 use Vinelab\Youtube\Validators\VideoResponseValidator;
 use Vinelab\Youtube\Validators\ChannelResponseValidator;
@@ -73,7 +73,7 @@ class Api implements ApiInterface {
      */
     public function __construct(Config $config,
                                 Client $http_client,
-                                YoutubeVideoInterface $video,
+                                VideoInterface $video,
                                 ParserInterface $parser,
                                 VideoResponseValidator $video_validator,
                                 ChannelResponseValidator $channel_validator,
