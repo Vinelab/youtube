@@ -148,23 +148,17 @@ class Synchronizer implements SynchronizerInterface {
         foreach ($response_videos as $response_video) {
             foreach ($request_videos as $request_video) {
                 // if the youtube video id doesn't not exist locally (means it's a new video on youtube)
-                if ($response_video->id != $request_video->id) {
-                    // add the new video to the result
+                if ($this->are_different_videos($response_video, $request_video)) {
+                    // add the youtube video to the result
                     $results_holder->push($response_video);
                 } else {
                     // if the etag is the same (means video have not been updated locally or online)
-                    if ($request_video->etag == $response_video->etag) {
+                    if ($this->is_modified($response_video, $request_video)) {
                         // add the local video to the result
                         $results_holder->push($request_video);
                     } else {
-                        // if the video was updated check if sync enabled
-                        if ($request_video->sync_enabled == true) {
-                            // add the youtube video to the result
-                            $results_holder->push($response_video);
-                        } else {
-                            // add the local video to the result
-                            $results_holder->push($request_video);
-                        }
+                        // if the sync is enabled then add the youtube video to the result else add the local video
+                        $results_holder->push($this->is_syncable($request_video) ? $response_video : $request_video);
                     }
                 }
             }
@@ -173,6 +167,38 @@ class Synchronizer implements SynchronizerInterface {
         $this->data->setVideos($results_holder);
 
         return $results_holder;
+    }
+
+
+    /**
+     * @param $video1
+     * @param $video2
+     *
+     * @return bool
+     */
+    protected function are_different_videos($video1, $video2)
+    {
+        return ($video1->id != $video2->id);
+    }
+
+    /**
+     * @param $video
+     *
+     * @return mixed
+     */
+    protected function is_modified($video1, $video2)
+    {
+        return  $video1->etag == $video2->etag;
+    }
+
+    /**
+     * @param $video
+     *
+     * @return mixed
+     */
+    protected function is_syncable($video)
+    {
+        return $video->sync_enabled;
     }
 
     /**
