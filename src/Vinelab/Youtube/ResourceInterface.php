@@ -1,6 +1,7 @@
 <?php namespace Vinelab\Youtube;
 
 interface ResourceInterface {
+
     /**
      * Return raw youtube information
      * @return array
@@ -9,7 +10,7 @@ interface ResourceInterface {
 
     /**
      * Return the youtube synced_at value
-     * @return date 
+     * @return date
      */
     public function youtubeSyncedAt();
 }

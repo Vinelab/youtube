@@ -8,16 +8,15 @@ class VideoException extends RuntimeException {
      * The error messages.
      * @var array
      */
-    protected $messages; 
+    protected $messages;
 
     /**
      * create an instance of this class
-     * @param array $messages 
+     * @param array $messages
      */
     public function __construct($messages = [])
     {
-        if( ! is_array($messages) )
-        {
+        if (! is_array($messages)) {
             $messages = [$messages];
         }
 

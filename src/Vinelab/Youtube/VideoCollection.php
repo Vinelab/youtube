@@ -2,4 +2,6 @@
 
 use Illuminate\Support\Collection;
 
-class VideoCollection extends Collection {}
+class VideoCollection extends Collection {
+
+}

@@ -8,7 +8,7 @@ class YoutubeTest extends TestCase {
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->manager = M::mock('Vinelab\Youtube\Contracts\ManagerInterface');
         $this->youtube = new Youtube($this->manager);
     }
@@ -22,7 +22,7 @@ class YoutubeTest extends TestCase {
                     ->andReturn($expected);
 
         $video = $this->youtube->video($url);
-        
+
         $this->assertEquals($expected, $video);
     }
 
@@ -52,19 +52,20 @@ class YoutubeTest extends TestCase {
         $this->assertEquals($expected, $channel);
     }
 
-//    public function test_syncing_a_video()
-//    {
-//        $video_param = M::mock('Vinelab\Youtube\Video');
-//        $expected = M::mock('Vinelab\Youtube\Video');
-//        $url = 'https://www.youtube.com/watch?v=KKNxOTJES1U';
-//        $this->manager->shouldReceive('sync')
-//                        ->with($video_param)
-//                        ->andReturn($expected);
-//
-//        $video = $this->manager->sync($video_param);
-//
-//        $this->assertEquals($expected, $video);
-//    }
+    public function test_syncing_a_video()
+    {
+        $video_param = M::mock('Vinelab\Youtube\Video');
+        $expected = M::mock('Vinelab\Youtube\Video');
+        $url = 'https://www.youtube.com/watch?v=KKNxOTJES1U';
+
+        $this->manager->shouldReceive('sync')
+                        ->with($video_param)
+                        ->andReturn($expected);
+
+        $video = $this->youtube->sync($video_param);
+
+        $this->assertEquals($expected, $video);
+    }
 
     public function tearDown()
     {

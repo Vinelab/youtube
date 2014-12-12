@@ -1,13 +1,12 @@
 <?php namespace Vinelab\Youtube\Validators;
 
 use Vinelab\Youtube\Exceptions\InvalidResponseException;
-use Vinelab\Youtube\Validators\ExpectedYoutubeResponse;
 
 class VideoResponseValidator extends Validator {
 
     protected $rules = [
         'kind'      =>  'required',
-        'etag'      =>  'required'
+        'etag'      =>  'required',
     ];
 
     public function validate($attributes)
@@ -20,15 +19,13 @@ class VideoResponseValidator extends Validator {
          * as the expected response from youtube.
          * if not, throw InvalidResponseException.
          */
-        if( ! $this->expectedKeys($attributes, ExpectedYoutubeResponse::video()) )
-        {
-            throw new InvalidResponseException;
+        if (! $this->expectedKeys($attributes, ExpectedYoutubeResponse::video())) {
+            throw new InvalidResponseException();
         }
 
         $validation = $this->validation($attributes);
-        
-        if ($validation->fails())
-        {
+
+        if ($validation->fails()) {
             throw new InvalidResponseException($validation->messages()->all());
         }
 

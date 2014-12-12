@@ -1,14 +1,8 @@
 <?php namespace Vinelab\Youtube;
 
-use Vinelab\Youtube\VideoCollection;
-use Vinelab\Youtube\YoutubeChannelInterface;
-use Vinelab\Youtube\VideoInterface;
-use Vinelab\Youtube\ResourceInterface;
 use Vinelab\Youtube\Contracts\ApiInterface;
 use Vinelab\Youtube\Contracts\ChannelInterface;
-use Vinelab\Youtube\Contracts\VideoManagerInterface;
 use Vinelab\Youtube\Contracts\SynchronizerInterface;
-use Vinelab\Youtube\Contracts\YoutubeParserInterface;
 use Vinelab\Youtube\Exceptions\IncompatibleParametersException;
 
 class Synchronizer implements SynchronizerInterface {
@@ -35,13 +29,13 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * Create a new instance of the VideoSynchroniser
-     * @param ApiInterface            $api
+     * @param ApiInterface     $api
      * @param ChannelInterface $channel
      */
     public function __construct(ApiInterface $api, ChannelInterface $channel)
     {
         $this->api = $api;
-        $this->channel  = $channel;
+        $this->channel = $channel;
     }
 
     /**
@@ -53,59 +47,59 @@ class Synchronizer implements SynchronizerInterface {
      * compatible(different kind) because if the resource has been deleted
      * Null will be returned in the response.
      *
-     * @param  ResourceInterface $existing_data
+     * @param \Vinelab\Youtube\ResourceInterface $resource
+     *
+     * @internal param \Vinelab\Youtube\ResourceInterface $existing_data
      * @return Channel|Video
      */
     public function sync($resource)
     {
-        $url = $resource->url();
+        // getting the youtube related information from the resource (info such as 'youtube_id')
+        $info = $resource->getYoutubeInfo();
 
         // sync channels: Vinelab\Youtube\Channel
-        if($resource instanceof YoutubeChannelInterface)
-        {
-            $synced_at = new \DateTime($resource->synced_at);
-            $synced_at = $synced_at->format('Y-m-d\TH:i:sP');
+        if ($resource instanceof YoutubeChannelInterface) {
+            $synced_at = (new \DateTime($resource->synced_at))->format('Y-m-d\TH:i:sP');
 
-            $response = $this->api->channel($resource->getYoutubeId(), $synced_at);
+            // make the online request
+            $response = $this->api->channel($info['youtube_id'], $synced_at);
 
-            if(count($response->items) == 0)
-            {
-                $response = $this->api->channel($resource->getYoutubeId());
+            // if nothing returned, make another call but without the $synced_at param
+            if (count($response->videos->all()) == 0) {
+                $response = $this->api->channel($info['youtube_id']);
             }
-            //check if sync is enabled for a channel
-            if($this->syncable($resource))
-            {
-                //Sync the channel with the new data
+
+            // check if sync is enabled for a channel
+//            if($this->syncable($resource))
+//            {
+                // sync the channel with the new data
                 $this->setChannelData($response);
-            }
-            //sync the video if changed
-            $this->syncVideos($resource, $response);
+//            }
 
-            // sync single videos: Vinelab\Youtube\Video
-        } else if($resource instanceof VideoInterface)
-        {
-            $response = $this->api->video($url);
+            // sync the channel videos videos that needs to be synced
+            return $this->syncVideos($resource, $response);
+        }   // sync single videos: Vinelab\Youtube\Video
+        elseif ($resource instanceof YoutubeVideoInterface) {
+            // make the online request
+            $response = $this->api->video($info['youtube_id']);
+
             //check if sync if enabled for a video
-            if($this->syncable($resource))
-            {
+            if ($this->syncable($resource)) {
                 //check if the etags are not the same.
                 //if so, set the data to be equal to the
-                //reponse value and return true.
-                if($this->videoDiff($resource, $response))
-                {
-                    $this->data = $response;
+                //response value and return true.
+                if ($this->videoDiff($resource, $response)) {
+                    return $response;
                 }
             }
         } else {
             //this will be throw if the following conditions were satisfied:
             //1. video + channel has been passed to the Sync method.
             //2. two videos has been passed with one of them deleted.
-            //notice that we will never have a condition where an existing resource's 
+            //notice that we will never have a condition where an existing resource's
             //value is null, because it will mean that the actual resource doesn't exist.
-            throw new IncompatibleParametersException;
+            throw new IncompatibleParametersException();
         }
-
-        return $this->data;
     }
 
     /**
@@ -118,18 +112,17 @@ class Synchronizer implements SynchronizerInterface {
     {
         //if the etag is different and if sync is enabled.
         //then return the new video info.
-        if($resource->etag != $response->etag)
-        {
+        if ($resource->etag != $response->etag) {
             return true;
         }
-        //if the etags are the same, this means that 
-        //there are no changes in the video. 
+        //if the etags are the same, this means that
+        //there are no changes in the video.
         return false;
     }
 
     /**
      * Sync the channel without the videos
-     * @param  Channel $response
+     * @param Channel $response
      */
     protected function setChannelData($response)
     {
@@ -137,76 +130,49 @@ class Synchronizer implements SynchronizerInterface {
     }
 
     /**
-     * Sync the video inside the channel
-     * @param  Channel $resource
-     * @param  Channel $response
+     * Sync the videos inside the channel
+     *
+     * @param $request
+     * @param $response
+     *
+     * @return \Vinelab\Youtube\VideoCollection
      */
-    protected function syncVideos($resource, $response)
+    protected function syncVideos($request, $response)
     {
-        $resource_videos = $resource->videos;
-        $old_etags = $resource_videos->lists('etag');
-
         $response_videos = $response->videos;
-        $new_etags = $response_videos->lists('etag');
+        $request_videos = $request->videos;
 
-        //check what are the common etags between the resource and response
-        $intersect = array_intersect($new_etags, $old_etags);
+        // this will hold all the Video objects that needs to be returned
+        $results_holder = new VideoCollection();
 
-        //this should be added to the etags array
-        $added_etags = array_diff($new_etags, $old_etags);
-
-        //these must not exist in the etags array
-        $deleted_etags = array_diff($old_etags, $new_etags);
-
-        //this contains the etags for all the videos that should exist in the final album
-        $etags = array_merge($intersect, $added_etags);
-
-        //this will hold all the Video object 
-        $videos = new VideoCollection;
-
-        //add all the video from the existing channel (assuming that it should exist in the final channel)
-        //to the Video collection (that will contain the final video result)
-        foreach($resource->videos as $video)
-        {
-            //if sync is not enabled don't add the video
-            if($this->syncable($video))
-            {
-                foreach($etags as $key=>$etag)
-                {
-                    if($video->etag == $etag)
-                    {
-                        //add the video
-                        $videos->push($video);
-                        //remove the etag from the final etags array
-                        //so that it won't be used when looping in the new channel(newly fetched)
-                        unset($etags[$key]);
-                    }
-                }
-            }
-        }
-
-        //add any video that still exist and to be added to the final video collection.
-        //use the newly fetched channel
-        if( ! empty($etags))
-        {
-            foreach($response->videos as $video)
-            {
-                //if sync is not enabled don't add the video
-                if($this->syncable($video))
-                {
-                    foreach($etags as $etag)
-                    {
-                        if($video->etag == $etag)
-                        {
-                            //add the video
-                            $videos->push($video);
+        foreach ($response_videos as $response_video) {
+            foreach ($request_videos as $request_video) {
+                // if the youtube video id doesn't not exist locally (means it's a new video on youtube)
+                if ($response_video->id != $request_video->id) {
+                    // add the new video to the result
+                    $results_holder->push($response_video);
+                } else {
+                    // if the etag is the same (means video have not been updated locally or online)
+                    if ($request_video->etag == $response_video->etag) {
+                        // add the local video to the result
+                        $results_holder->push($request_video);
+                    } else {
+                        // if the video was updated check if sync enabled
+                        if ($request_video->sync_enabled == true) {
+                            // add the youtube video to the result
+                            $results_holder->push($response_video);
+                        } else {
+                            // add the local video to the result
+                            $results_holder->push($request_video);
                         }
                     }
                 }
             }
         }
-        //set the video attribute to be the newly created video collection.
-        $this->data->setVideos($videos);
+
+        $this->data->setVideos($results_holder);
+
+        return $results_holder;
     }
 
     /**
