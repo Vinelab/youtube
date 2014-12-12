@@ -15,17 +15,17 @@ class YoutubeUrlParser {
      * @param  string $youtube_url
      * @return string Video Id
      */
-    public static function parseId($youtube_url){
-        if(strpos($youtube_url, 'youtube.com'))
-        {
-            return self::parseUrlQuery($youtube_url)['v']; 
-        } else if(strpos($youtube_url, 'youtu.be'))
-        {
+    public static function parseId($youtube_url)
+    {
+        if (strpos($youtube_url, 'youtube.com')) {
+            return self::parseUrlQuery($youtube_url)['v'];
+        } elseif (strpos($youtube_url, 'youtu.be')) {
             $path = parse_url($youtube_url)['path'];
+
             return substr($path, 1);
         }
 
-        throw new InvalidVideoUrlException;
+        throw new InvalidVideoUrlException();
     }
 
     /**
@@ -33,17 +33,17 @@ class YoutubeUrlParser {
      * @param  string $youtube_url
      * @return string channel
      */
-    public static function parseChannelUrl($youtube_url){
-
+    public static function parseChannelUrl($youtube_url)
+    {
         $path = parse_url($youtube_url)['path'];
 
-        if(strpos($path, '/channel') === 0 or strpos($path, '/user') === 0)
-        {
+        if (strpos($path, '/channel') === 0 or strpos($path, '/user') === 0) {
             $segments = explode('/', $path);
+
             return $segments[count($segments)-1];
         }
 
-        throw new InvalidVideoUrlException;
+        throw new InvalidVideoUrlException();
     }
 
     /**
@@ -54,17 +54,16 @@ class YoutubeUrlParser {
     private static function parseUrlQuery($url)
     {
         $params = [];
-        $parsed_url = ( isset(parse_url($url)['query']) ) ? parse_url($url)['query'] : null;
+        $parsed_url = (isset(parse_url($url)['query'])) ? parse_url($url)['query'] : null;
 
-        if( $parsed_url == null )
-        {
-            throw new InvalidVideoUrlException;
+        if ($parsed_url == null) {
+            throw new InvalidVideoUrlException();
         }
 
-        $url_parts = explode('&', $parsed_url); 
-        foreach ($url_parts as $param) { 
-            $item = explode('=', $param); 
-            $params[$item[0]] = $item[1]; 
+        $url_parts = explode('&', $parsed_url);
+        foreach ($url_parts as $param) {
+            $item = explode('=', $param);
+            $params[$item[0]] = $item[1];
         }
 
         return $params;

@@ -1,6 +1,5 @@
-<?php namespace Vinelab\Youtube\Tests;
+<?php namespace Vinelab\Youtube\tests;
 
 class TestCase extends \PHPUnit_Framework_TestCase {
-
 
 }

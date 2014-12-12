@@ -8,7 +8,7 @@ class YoutubeTest extends TestCase {
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->manager = M::mock('Vinelab\Youtube\Contracts\ManagerInterface');
         $this->youtube = new Youtube($this->manager);
     }
@@ -22,7 +22,7 @@ class YoutubeTest extends TestCase {
                     ->andReturn($expected);
 
         $video = $this->youtube->video($url);
-        
+
         $this->assertEquals($expected, $video);
     }
 

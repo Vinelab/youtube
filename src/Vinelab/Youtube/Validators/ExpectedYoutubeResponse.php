@@ -4,17 +4,17 @@ class ExpectedYoutubeResponse {
 
     /**
      * return the expected video response
-     * @return array 
+     * @return array
      */
     public static function video()
     {
-        return 
+        return
             $expected_video = [
                 'kind'  =>  'example',
                 'etag'  =>  'example',
                 'pageInfo'  => [
                     'totalResults'      =>  'example',
-                    'resultsPerPage'    =>  'example'
+                    'resultsPerPage'    =>  'example',
                 ],
                 'items' =>  [[
                     'kind'  =>  'example',
@@ -29,40 +29,40 @@ class ExpectedYoutubeResponse {
                             'default'   =>  [
                                 'url'       =>  'example',
                                 'width'     =>  'example',
-                                'height'    =>  'example'
+                                'height'    =>  'example',
                             ],
                             'medium'   =>  [
                                 'url'       =>  'example',
                                 'width'     =>  'example',
-                                'height'    =>  'example'
+                                'height'    =>  'example',
                             ],
                             'high'   =>  [
                                 'url'       =>  'example',
                                 'width'     =>  'example',
-                                'height'    =>  'example'
+                                'height'    =>  'example',
                             ],
                             'standard'   =>  [
                                 'url'       =>  'example',
                                 'width'     =>  'example',
-                                'height'    =>  'example'
+                                'height'    =>  'example',
                             ],
                             'maxres'   =>  [
                                 'url'       =>  'example',
                                 'width'     =>  'example',
-                                'height'    =>  'example'
-                            ]
+                                'height'    =>  'example',
+                            ],
                         ],
                         'channelTitle'  =>  'example',
                         'categoryId'    =>  'example',
-                        'liveBroadcastContent'  =>  'example'
-                    ]
-                ]]
+                        'liveBroadcastContent'  =>  'example',
+                    ],
+                ]],
             ];
     }
 
     /**
      * return the expected channel response
-     * @return array 
+     * @return array
      */
     public static function channel()
     {
@@ -71,7 +71,7 @@ class ExpectedYoutubeResponse {
                 'etag'  =>  'example',
                 'pageInfo'  => [
                     'totalResults'      =>  'example',
-                    'resultsPerPage'    =>  'example'
+                    'resultsPerPage'    =>  'example',
                 ],
                 'items' =>  [[
                     'kind'  =>  'example',
@@ -83,25 +83,25 @@ class ExpectedYoutubeResponse {
                         'publishedAt'   =>  'example',
                         'thumbnails'    =>  [
                             'default'   =>  [
-                                'url'   =>  'example'
+                                'url'   =>  'example',
                             ],
                             'medium'   =>  [
-                                'url'   =>  'example'
+                                'url'   =>  'example',
                             ],
                             'high'   =>  [
-                                'url'   =>  'example'
-                            ]
-                        ]
+                                'url'   =>  'example',
+                            ],
+                        ],
                     ],
                     'contentDetails'    =>  [
                         'relatedPlaylists'  =>  [
                             'likes'     =>  'example',
                             'favorites' =>  'example',
-                            'uploads'   =>  'example'
+                            'uploads'   =>  'example',
                         ],
-                        'googlePlusUserId'  =>  'example'
-                    ]
-                ]]
+                        'googlePlusUserId'  =>  'example',
+                    ],
+                ]],
             ];
     }
 
@@ -112,7 +112,7 @@ class ExpectedYoutubeResponse {
             'etag'  =>  'example',
             'id'    =>  [
                 'kind'      =>  'example',
-                'videoId'   =>  'example'
+                'videoId'   =>  'example',
             ],
             'snippet'   =>  [
                 'publishedAt'   =>  'example',
@@ -121,18 +121,18 @@ class ExpectedYoutubeResponse {
                 'description'   =>  'example',
                 'thumbnails'    =>  [
                     'default'   =>  [
-                        'url'   =>  'example'
+                        'url'   =>  'example',
                     ],
                     'medium'   =>  [
-                        'url'   =>  'example'
+                        'url'   =>  'example',
                     ],
                     'high'   =>  [
-                        'url'   =>  'example'
-                    ]
+                        'url'   =>  'example',
+                    ],
                 ],
                 'channelTitle'          =>  'example',
-                'liveBroadcastContent'  =>  'example'
-            ]
+                'liveBroadcastContent'  =>  'example',
+            ],
         ];
     }
 }

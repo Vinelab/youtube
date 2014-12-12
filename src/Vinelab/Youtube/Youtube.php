@@ -9,21 +9,21 @@ class Youtube implements YoutubeInterface {
      * The manager instance
      * @var Vinelab\Youtube\Contracts\ManagerInterface
      */
-    protected $manager; 
+    protected $manager;
 
     /**
      * Create a new instance of Youtube
-     * @param  ManagerInterface $manager 
+     * @param ManagerInterface $manager
      */
     public function __construct(ManagerInterface $manager)
-    {   
+    {
         $this->manager = $manager;
     }
 
     /**
      * return a single video info
-     * @param  string $url 
-     * @return Vinelab\Youtube\Video      
+     * @param  string                $url
+     * @return Vinelab\Youtube\Video
      */
     public function video($url)
     {
@@ -32,21 +32,21 @@ class Youtube implements YoutubeInterface {
 
     /**
      * return a channel with its videos
-     * @param  string $url       
-     * @param  date $synced_at 
-     * @return Vinelab\Youtube\Channel            
+     * @param  string                  $url
+     * @param  date                    $synced_at
+     * @return Vinelab\Youtube\Channel
      */
-    public function channel($url, $synced_at=null)
+    public function channel($url, $synced_at = null)
     {
         return $this->manager->videosForChannel($url, $synced_at);
     }
 
     /**
      * sync the resource
-     * @param  Video|Channel $resource 
-     * @return Video|Channel           
+     * @param  Video|Channel $resource
+     * @return Video|Channel
      */
-    public function sync($resource)
+    public function sync(ResourceInterface $resource)
     {
         return $this->manager->sync($resource);
     }

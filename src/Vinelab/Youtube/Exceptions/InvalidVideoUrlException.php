@@ -1,3 +1,5 @@
 <?php namespace Vinelab\Youtube\Exceptions;
 
-class InvalidVideoUrlException extends VideoException {}
+class InvalidVideoUrlException extends VideoException {
+
+}

@@ -2,7 +2,6 @@
 
 use HttpClient;
 use Vinelab\Http\Client;
-use Vinelab\Youtube\VideoCollection;
 use Illuminate\Config\Repository as Config;
 use Vinelab\Youtube\Contracts\ApiInterface;
 use Vinelab\Youtube\Contracts\VideoInterface;
@@ -41,7 +40,7 @@ class Api implements ApiInterface {
      * The parser instance
      * @var Vinelab\Youtube\Contracts\ParserInterface
      */
-    protected  $parser;
+    protected $parser;
 
     /**
      * The video validator instance
@@ -95,7 +94,7 @@ class Api implements ApiInterface {
 
     /**
      * Get single video info
-     * @param  string $video_id
+     * @param  string   $video_id
      * @return stdClass
      */
     public function video($video_id)
@@ -107,31 +106,32 @@ class Api implements ApiInterface {
         $params = [
             'id'    => $video_id,
             'key'   => $this->key,
-            'part'  => 'id, snippet'
+            'part'  => 'id, snippet',
         ];
 
         //make the api call
         $response = $this->get($api_url, $params);
+
         //validate if the youtube response satisfy what is expected.
         $this->video_validator->validate($response);
         //check if the video hasn't been deleted, then return the result accordingly.
-        //$response->items will always exist in the response. however, if the video 
-        //has been deleted, items would be empty. So, it would be valid to check if 
+        //$response->items will always exist in the response. however, if the video
+        //has been deleted, items would be empty. So, it would be valid to check if
         //it's empty before returning the result.
         return (! empty($response->items)) ? $this->video->make(array_pop($response->items)) : null;
     }
 
     /**
      * get all videos related to a channel
-     * @param  string  $channel_id
-     * @param  string  $page
-     * @param  string  $q
-     * @param  integer $max_result
-     * @param  string  $order
-     * @param  date $published_after (format: "Y-m-d\TH:i:sP" RFC 3339)
+     * @param  string   $channel_id
+     * @param  string   $page
+     * @param  string   $q
+     * @param  integer  $max_result
+     * @param  string   $order
+     * @param  date     $published_after (format: "Y-m-d\TH:i:sP" RFC 3339)
      * @return stdClass
      */
-    public function searchChannelVideosForPage($channel_id, $page=null, $q=null, $max_result=20, $order='date', $published_after=null)
+    public function searchChannelVideosForPage($channel_id, $page = null, $q = null, $max_result = 20, $order = 'date', $published_after = null)
     {
         $api_url = $this->uris['search.list'];
 
@@ -144,7 +144,7 @@ class Api implements ApiInterface {
             'pageToken'         =>  $page,
             'maxResults'        =>  $max_result,
             'order'             =>  $order,
-            'publishedAfter'    =>  $published_after
+            'publishedAfter'    =>  $published_after,
         ];
 
         return $this->get($api_url, $params);
@@ -163,26 +163,24 @@ class Api implements ApiInterface {
     /**
      * return all channel's videos by channel id
      * @param  string $channel_id
-     * @param date $published_after RFC 3339 formatted date-time value (1970-01-01T00:00:00Z)
+     * @param  date   $published_after RFC 3339 formatted date-time value (1970-01-01T00:00:00Z)
      * @return array
      */
-    public function searchChannelVideos($channel_id, $published_after=null)
+    public function searchChannelVideos($channel_id, $published_after = null)
     {
         $pages = [];
         $page_token = null;
 
         do {
             $res = $this->searchChannelVideosForPage($channel_id, $page_token, $published_after);
-            $page_token = ( isset($res->nextPageToken) ) ? $res->nextPageToken : null;
+            $page_token = (isset($res->nextPageToken)) ? $res->nextPageToken : null;
             $has_pages = $this->hasMorePages($res);
             array_push($pages, $res);
-        } while($has_pages);
+        } while ($has_pages);
 
         //if we have videos, loop through them and validate them one by one.
-        foreach($pages as $page)
-        {
-            foreach($page->items as $video)
-            {
+        foreach ($pages as $page) {
+            foreach ($page->items as $video) {
                 //validate the videos
                 $this->search_validator->validate($video);
             }
@@ -191,12 +189,17 @@ class Api implements ApiInterface {
         return $pages;
     }
 
-    public function channel($id_or_name, $synced_at=null)
+    /**
+     * @param string $id_or_name
+     * @param null   $synced_at
+     *
+     * @return \Vinelab\Youtube\Contracts\Vinelab\Youtube\Channel|\Vinelab\Youtube\Contracts\Vinelab\Youtube\VideoCollection
+     */
+    public function channel($id_or_name, $synced_at = null)
     {
         $channel = $this->getChannelById($id_or_name);
 
-        if(empty($channel->items))
-        {
+        if (empty($channel->items)) {
             $channel = $this->getChannelByName($id_or_name);
         }
         //validate the channel info
@@ -213,7 +216,7 @@ class Api implements ApiInterface {
 
     /**
      * return the channel by username
-     * @param  string $username
+     * @param  string   $username
      * @return stdClass
      */
     public function getChannelByName($username)
@@ -225,18 +228,19 @@ class Api implements ApiInterface {
         $params = [
             'forUsername'   => $username,
             'key'           => $this->key,
-            'part'          => 'id,snippet,contentDetails'
+            'part'          => 'id,snippet,contentDetails',
         ];
 
         //make the api call
         $result = $this->get($api_url, $params);
         $this->channel_validator->validate($result);
+
         return $result;
     }
 
     /**
      * return the channel by ID
-     * @param  string $username
+     * @param  string   $username
      * @return stdClass
      */
     public function getChannelById($id)
@@ -248,25 +252,26 @@ class Api implements ApiInterface {
         $params = [
             'id'        => $id,
             'key'       => $this->key,
-            'part'      => 'id,snippet,contentDetails'
+            'part'      => 'id,snippet,contentDetails',
         ];
 
         //make the api call
         $result = $this->get($api_url, $params);
         $this->channel_validator->validate($result);
+
         return $result;
     }
 
-
     /**
      * Make the api call
-     * @param  string $url
-     * @param  array $params
+     * @param  string   $url
+     * @param  array    $params
      * @return stdClass
      */
     public function get($url, $params)
     {
         $result = $this->http_client->get(compact('url', 'params'));
+
         return $result->json();
     }
 }

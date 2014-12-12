@@ -1,6 +1,5 @@
 <?php namespace Vinelab\Youtube;
 
-use Vinelab\Youtube\VideoCollection;
 use Vinelab\Youtube\Contracts\VideoInterface;
 use Vinelab\Youtube\Contracts\ChannelInterface;
 use Vinelab\Youtube\Contracts\ParserInterface;
@@ -21,8 +20,8 @@ class Parser implements ParserInterface {
 
     /**
      * Create a new Parser instance
-     * @param VideoInterface   $video   
-     * @param ChannelInterface $channel 
+     * @param VideoInterface   $video
+     * @param ChannelInterface $channel
      */
     public function __construct(VideoInterface $video, ChannelInterface $channel)
     {
@@ -32,20 +31,18 @@ class Parser implements ParserInterface {
 
     /**
      * Parse the given video and channel data.
-     * @param  array $video_pages 
-     * @param  array $channel     
-     * @return Vinelab\Youtube\Channel              
+     * @param  array                   $video_pages
+     * @param  array                   $channel
+     * @return Vinelab\Youtube\Channel
      */
     public function parse($video_pages, $channel)
     {
-        $videos = new VideoCollection;
+        $videos = new VideoCollection();
         //loop through the pages return from the api call
-        //and add all the video to the Video Collection to 
+        //and add all the video to the Video Collection to
         //be passed to the 'channel make method'.
-        foreach($video_pages as $page)
-        {
-            foreach($page->items as $video)
-            {
+        foreach ($video_pages as $page) {
+            foreach ($page->items as $video) {
                 $videos->push($this->video->make($video));
             }
         }
