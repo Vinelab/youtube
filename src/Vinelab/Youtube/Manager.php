@@ -3,9 +3,11 @@
 use Vinelab\Youtube\Contracts\ApiInterface;
 use Vinelab\Youtube\Contracts\ManagerInterface;
 use Vinelab\Youtube\Contracts\SynchronizerInterface;
+use Vinelab\Youtube\Contracts\Vinelab;
 use Vinelab\Youtube\Helpers\YoutubeUrlParser as UrlParser;
 
-class Manager implements ManagerInterface {
+class Manager implements ManagerInterface
+{
 
     /**
      * The api instance.
@@ -21,33 +23,44 @@ class Manager implements ManagerInterface {
 
     /**
      * Create a new Manager instance
+     *
      * @param ApiInterface          $youtube
      * @param SynchronizerInterface $synchronizer
      */
-    public function __construct(ApiInterface $api,
-                                SynchronizerInterface $synchronizer)
-    {
+    public function __construct(
+        ApiInterface $api,
+        SynchronizerInterface $synchronizer
+    ) {
         $this->api = $api;
         $this->synchronizer = $synchronizer;
     }
 
     /**
-     * Return a video info
-     * @param  string                $url
-     * @return Vinelab\Youtube\Video
+     * Return a videos info
+     *
+     * @param string|array $urls
+     *
+     * @return \Vinelab\Youtube\Contracts\Vinelab\Youtube\YoutubeVideo
      */
-    public function video($url)
+    public function videos($urls)
     {
-        //parser the url and return the video id
-        $vid = UrlParser::parseId($url);
+        if (! is_array($urls)) {
+            return $this->api->video(UrlParser::parseId($urls));
+        }
+        // if array parse each url
+        $vids = array_map(function ($url) {
+            return UrlParser::parseId($url);
+        }, $urls);
 
-        return $this->api->video($vid);
+        return $this->api->video($vids);
     }
 
     /**
      * return the channel's videos by id or by username.
-     * @param  string                  $id_or_name
-     * @param  date                    $synced_at
+     *
+     * @param  string $id_or_name
+     * @param  date   $synced_at
+     *
      * @return Vinelab\Youtube\Channel
      */
     public function videosForChannel($url, $synced_at = null)
@@ -60,7 +73,9 @@ class Manager implements ManagerInterface {
 
     /**
      * Sync a resource (channel or video)
+     *
      * @param  ResourceInterface $resource
+     *
      * @return Channel|Video
      */
     public function sync(ResourceInterface $resource)
@@ -74,7 +89,9 @@ class Manager implements ManagerInterface {
 
     /**
      * return the type of object
+     *
      * @param  Object $object
+     *
      * @return string
      */
     protected function typeOf($object)
@@ -92,11 +109,23 @@ class Manager implements ManagerInterface {
     public function prepareUrl($url)
     {
         if (!preg_match('/http[s]?:\/\//', $url, $matches)) {
-            $url = 'http://'.$url;
+            $url = 'http://' . $url;
 
             return $url;
         }
 
         return $url;
+    }
+
+    /**
+     * Return a video info
+     *
+     * @param  string $vid
+     *
+     * @return Vinelab\Youtube\Video
+     */
+    public function video($vid)
+    {
+        // TODO: Implement video() method.
     }
 }

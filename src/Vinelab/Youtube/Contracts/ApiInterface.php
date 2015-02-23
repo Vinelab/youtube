@@ -11,9 +11,11 @@ interface ApiInterface {
     public function get($url, $params);
 
     /**
-     * Get single video info
-     * @param  string                       $video_id
-     * @return Vinelab\Youtube\YoutubeVideo
+     * Get videos info
+     *
+     * @param  string|array   $video_ids
+     *
+     * @return stdClass
      */
     public function video($video_id);
 

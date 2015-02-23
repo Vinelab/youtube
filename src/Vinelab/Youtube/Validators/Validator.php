@@ -43,9 +43,10 @@ abstract class Validator implements Contracts\ValidatorInterface {
      */
     protected function expectedKeys($attributes, $expected)
     {
-        $result = $this->intersect($attributes, $expected);
+        // TODO: remove this commented out function !
+//        $result = $this->intersect($attributes, $expected);
 
-        return ($result === $attributes) ? true : false;
+        return (array_keys($attributes) === array_keys($expected)) ? true : false;
     }
 
     /**

@@ -5,23 +5,53 @@ use Vinelab\Youtube\Contracts\VideoInterface;
 class Video implements VideoInterface, ResourceInterface {
 
     /**
-     * istantiate an instance of this class
-     * @param  stdClass              $response
+     * if the response does not sync_enabled value will take this default value
+     */
+    const DEFAULT_SYNC_STATUS = false;
+
+    /**
+     * response kind for search result
+     */
+    const SEARCH_RESULT = 'youtube#searchResult';
+
+    /**
+     * youtube URL for video
+     */
+    const URL_VIDEO = 'https://www.youtube.com/watch?v=';
+
+    /**
+     * instantiate instances of this class
+     *
+     * @param  stdClasses|array of stdClasses $responses
+     *
      * @return Vinelab\Youtube\Video
      */
-    public function make($response)
+    public function make($responses)
+    {
+        if (! is_array($responses)) { return $this->build($responses); }
+
+        // if array build each response
+        return array_map(function ($response) { return $this->build($response); }, $responses);
+    }
+
+    /**
+     * create, fill and return the object
+     *
+     * @param $response
+     *
+     * @return static
+     */
+    private function build($response)
     {
         $video = new static();
-
-        if ($response->kind == "youtube#searchResult") {
+        if ($response->kind == self::SEARCH_RESULT) {
             //use this if the reponse is coming from a search request.
             $video->fillFromSearch((array) $response);
         } else {
             //use this if the response if coming form a single video request.
             $video->fill((array) $response);
         }
-
-        return $video;
+         return $video;
     }
 
     /**
@@ -33,10 +63,11 @@ class Video implements VideoInterface, ResourceInterface {
         $this->kind         = $data['kind'];
         $this->id           = $data['id'];
         $this->etag         = $data['etag'];
-        $this->sync_enabled = (bool) $data['sync_enabled'];
+        $this->sync_enabled = (bool) isset($data['sync_enabled']) ? $data['sync_enabled'] : self::DEFAULT_SYNC_STATUS ;
         $this->synced_at    = date("Y-m-d\TH:i:sP");
         $this->snippet      = (array) $data['snippet'];
         $this->thumbnails   = $this->thumbnails($data['snippet']->thumbnails);
+        $this->url          = $this->url($data['id']);
 
         //remove the thumbnails, categoryId and liveBroadcastContent form the response
         unset($this->snippet['thumbnails']);
@@ -58,6 +89,7 @@ class Video implements VideoInterface, ResourceInterface {
         $this->synced_at    = date("Y-m-d\TH:i:sP");
         $this->snippet      = (array) $data['snippet'];
         $this->thumbnails   = $this->thumbnails($data['snippet']->thumbnails);
+        $this->url          = $this->url($data['id']->videoId);
 
         unset($this->snippet['thumbnails']);
         unset($this->snippet['liveBroadcastContent']);
@@ -67,9 +99,9 @@ class Video implements VideoInterface, ResourceInterface {
      * the video url
      * @return string
      */
-    public function url()
+    public function url($id = null)
     {
-        return 'https://www.youtube.com/watch?v='.$this->id;
+        return self::URL_VIDEO . (is_null($id) ? $this->id : $id);
     }
 
     /**

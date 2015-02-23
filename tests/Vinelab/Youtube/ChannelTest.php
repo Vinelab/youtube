@@ -3,6 +3,7 @@
 use Mockery as M;
 use Vinelab\Youtube\Channel;
 use Vinelab\Youtube\VideoCollection;
+use Vinelab\Youtube\tests\TestCase;
 
 class ChannelTest extends TestCase {
 

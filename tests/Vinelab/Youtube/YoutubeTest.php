@@ -2,6 +2,7 @@
 
 use Mockery as M;
 use Vinelab\Youtube\Youtube;
+use Vinelab\Youtube\tests\TestCase;
 
 class YoutubeTest extends TestCase {
 

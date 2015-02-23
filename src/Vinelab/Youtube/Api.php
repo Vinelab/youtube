@@ -1,5 +1,6 @@
 <?php namespace Vinelab\Youtube;
 
+use Cache;
 use HttpClient;
 use Vinelab\Http\Client;
 use Illuminate\Config\Repository as Config;
@@ -93,32 +94,50 @@ class Api implements ApiInterface {
     }
 
     /**
-     * Get single video info
-     * @param  string   $video_id
+     * Get videos info
+     *
+     * @param  string|array   $video_ids
+     *
      * @return stdClass
      */
-    public function video($video_id)
+    public function video($video_ids)
     {
         //set the url used for the api call
         $api_url = $this->uris['videos.list'];
 
         //set the parameters passed with the api call
         $params = [
-            'id'    => $video_id,
+            'id'    => is_array($video_ids) ? implode(',', $video_ids) : $video_ids,
             'key'   => $this->key,
             'part'  => 'id, snippet',
         ];
 
-        //make the api call
-        $response = $this->get($api_url, $params);
+        // NOTE: When Debugging uncomment the code below to cache the response
+        //--////////////////////////////////////--//
+
+//                $key = 'koukou123';
+//                if(! Cache::has($key)){
+
+            // make the api call
+            $response = $this->get($api_url, $params);
+
+//                    Cache::put($key, $response, 60);
+//                }else{
+//                    $response = Cache::get($key, null);
+//                }
+
+        //--////////////////////////////////////--//
 
         //validate if the youtube response satisfy what is expected.
         $this->video_validator->validate($response);
+
+        $items = is_array($video_ids) ? $response->items : array_pop($response->items);
+
         //check if the video hasn't been deleted, then return the result accordingly.
         //$response->items will always exist in the response. however, if the video
         //has been deleted, items would be empty. So, it would be valid to check if
         //it's empty before returning the result.
-        return (! empty($response->items)) ? $this->video->make(array_pop($response->items)) : null;
+        return (! empty($response->items)) ? $this->video->make($items) : null;
     }
 
     /**

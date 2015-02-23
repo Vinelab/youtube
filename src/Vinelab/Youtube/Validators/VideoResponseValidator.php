@@ -19,6 +19,7 @@ class VideoResponseValidator extends Validator {
          * as the expected response from youtube.
          * if not, throw InvalidResponseException.
          */
+
         if (! $this->expectedKeys($attributes, ExpectedYoutubeResponse::video())) {
             throw new InvalidResponseException();
         }

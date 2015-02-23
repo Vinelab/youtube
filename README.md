@@ -1,4 +1,4 @@
-## Laravel Youtube Library
+# Laravel Youtube Library
 This library is used for fetching videos and channels from youtube using a URL.
 
 ### Dependencies
@@ -6,15 +6,25 @@ This library is used for fetching videos and channels from youtube using a URL.
 * [vinelab/http](https://github.com/Vinelab/http)
 
 ### Installation
-* Clone the repository from [here](https://bitbucket.org/adibhanna/youtube).
-* Edit app.php and add ```Najem\Videos\VideosServiceProvider```
-* the ```Youtube``` Facade can be used to access the package's functionalities.
-
+1. Include using Composer: `"vinelab/youtube" : "*"`
+2. Add the service provider
+`'Vinelab\Youtube\YoutubeServiceProvider'`
+3. Add the Facade `'Youtube'         => 'Vinelab\Youtube\Facades\Youtube'`
+4. Publish the config file `php artisan config:publish Vinelab/youtube`
+5. Add your key to the config file
+ 
 ### Usage
-* To fetch a video by id use ```Youtube::video($url)```
-this will return an object of type ```Najem\Videos\Video```
+Use the `Youtube` Facade to access the package's functionalities.
+___
 
-#### Response
+#### `Youtube::video($url)`
+
+>> To fetch a video use `Youtube::video($url)`
+this will return an object of type `Najem\Videos\Video`
+
+Note: you can fetch multiple `videos` at once by passing an `array` of `Url's`, to `Youtube::videos($urls)` or even `Youtube::video($urls)`.
+
+##### Response:
 
 ```json
 object(Vinelab\Youtube\Video)[180]
@@ -38,11 +48,14 @@ object(Vinelab\Youtube\Video)[180]
       'standard' => string 'https://i1.ytimg.com/vi/1j1MBSwg44A/sddefault.jpg' (length=49)
       'maxres' => string 'https://i1.ytimg.com/vi/1j1MBSwg44A/maxresdefault.jpg' (length=53)
 ```
+___
 
-* To fetch a Channel by name or by id use ```Youtube::channel($url)```
-this will return an object of type ```Najem\Videos\Channel```
+#### `Youtube::channel($url)`
 
-#### Response
+>> To fetch a Channel use `Youtube::channel($url)`
+this will return an object of type `Najem\Videos\Channel`
+
+##### Response:
 
 ```json
 object(Najem\Videos\Channel)[209]
