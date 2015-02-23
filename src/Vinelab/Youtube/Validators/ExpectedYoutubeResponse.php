@@ -16,7 +16,8 @@ class ExpectedYoutubeResponse {
                     'totalResults'      =>  'example',
                     'resultsPerPage'    =>  'example',
                 ],
-                'items' =>  [[
+                'items' =>  [
+                    [
                     'kind'  =>  'example',
                     'etag'  =>  'example',
                     'id'    =>  'example',
@@ -56,7 +57,8 @@ class ExpectedYoutubeResponse {
                         'categoryId'    =>  'example',
                         'liveBroadcastContent'  =>  'example',
                     ],
-                ]],
+                ]
+                ],
             ];
     }
 

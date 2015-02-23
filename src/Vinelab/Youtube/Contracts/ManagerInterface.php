@@ -5,11 +5,11 @@ use Vinelab\Youtube\ResourceInterface;
 interface ManagerInterface {
 
     /**
-     * Return a video info
-     * @param  string                $vid
-     * @return Vinelab\Youtube\Video
+     * Return a videos info
+     * @param string|array $urls
+     * @return \Vinelab\Youtube\Contracts\Vinelab\Youtube\YoutubeVideo
      */
-    public function video($vid);
+    public function videos($vid);
 
     /**
      * return the channel's videos by id or by username.

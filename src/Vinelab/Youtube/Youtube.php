@@ -1,9 +1,10 @@
 <?php namespace Vinelab\Youtube;
 
-use Vinelab\Youtube\Contracts\YoutubeInterface;
 use Vinelab\Youtube\Contracts\ManagerInterface;
+use Vinelab\Youtube\Contracts\YoutubeInterface;
 
-class Youtube implements YoutubeInterface {
+class Youtube implements YoutubeInterface
+{
 
     /**
      * The manager instance
@@ -13,6 +14,7 @@ class Youtube implements YoutubeInterface {
 
     /**
      * Create a new instance of Youtube
+     *
      * @param ManagerInterface $manager
      */
     public function __construct(ManagerInterface $manager)
@@ -21,19 +23,35 @@ class Youtube implements YoutubeInterface {
     }
 
     /**
+     * return a videos info
+     *
+     * @param  array $urls
+     *
+     * @return Vinelab\Youtube\Video
+     */
+    public function videos($urls)
+    {
+        return $this->manager->videos($urls);
+    }
+
+    /**
      * return a single video info
-     * @param  string                $url
+     *
+     * @param  string $url
+     *
      * @return Vinelab\Youtube\Video
      */
     public function video($url)
     {
-        return $this->manager->video($url);
+        return $this->videos($url);
     }
 
     /**
      * return a channel with its videos
-     * @param  string                  $url
-     * @param  date                    $synced_at
+     *
+     * @param  string $url
+     * @param  date   $synced_at
+     *
      * @return Vinelab\Youtube\Channel
      */
     public function channel($url, $synced_at = null)
@@ -43,7 +61,9 @@ class Youtube implements YoutubeInterface {
 
     /**
      * sync the resource
+     *
      * @param  Video|Channel $resource
+     *
      * @return Video|Channel
      */
     public function sync(ResourceInterface $resource)
