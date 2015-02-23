@@ -5,6 +5,7 @@ use Vinelab\Youtube\Video;
 use Vinelab\Youtube\Parser;
 use Vinelab\Youtube\Contracts\VideoInterface;
 use Vinelab\Youtube\Contracts\ChannelInterface;
+use Vinelab\Youtube\tests\TestCase;
 
 class ParserTest extends TestCase {
 

@@ -9,6 +9,7 @@ use Vinelab\Youtube\Synchronizer;
 use Vinelab\Youtube\VideoCollection;
 use Vinelab\Youtube\Contracts\VideoInterface;
 use Vinelab\Youtube\Contracts\ChannelInterface;
+use Vinelab\Youtube\tests\TestCase;
 
 class SynchronizerTest extends TestCase {
 
