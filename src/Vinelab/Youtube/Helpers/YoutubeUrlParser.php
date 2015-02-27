@@ -1,6 +1,11 @@
 <?php namespace Vinelab\Youtube\Helpers;
 
 /**
+ * @author Adib
+ * @author Mahmoud Zalt <mahmoud@vinelab.com>
+ */
+
+/**
  * This Helper class is used to parse the youtube URL in all its forms
  * and return the video ids, channel username or channel id.
  */
@@ -41,6 +46,26 @@ class YoutubeUrlParser {
             $segments = explode('/', $path);
 
             return $segments[count($segments)-1];
+        }
+
+        throw new InvalidVideoUrlException();
+    }
+
+    /**
+     * Get the playlist reference by supplying the URL of the playlist page.
+     *
+     * @param  string $youtube_url
+     * @return string playlist
+     */
+    public static function parsePlaylistUrl($youtube_url)
+    {
+        $query = parse_url($youtube_url)['query'];
+
+        $get_array = [];
+        parse_str($query, $get_array);
+
+        if(isset($get_array['list']) && ! empty($get_array['list'])){
+            return $get_array['list'];
         }
 
         throw new InvalidVideoUrlException();

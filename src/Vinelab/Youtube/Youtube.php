@@ -1,5 +1,10 @@
 <?php namespace Vinelab\Youtube;
 
+/**
+ * @author Adib
+ * @author Mahmoud Zalt <mahmoud@vinelab.com>
+ */
+
 use Vinelab\Youtube\Contracts\ManagerInterface;
 use Vinelab\Youtube\Contracts\YoutubeInterface;
 
@@ -57,6 +62,19 @@ class Youtube implements YoutubeInterface
     public function channel($url, $synced_at = null)
     {
         return $this->manager->videosForChannel($url, $synced_at);
+    }
+
+    /**
+     * return a playlist with its videos
+     *
+     * @param  string $url
+     * @param  date   $synced_at
+     *
+     * @return Vinelab\Youtube\Playlist
+     */
+    public function playlist($url, $synced_at = null)
+    {
+        return $this->manager->videosForPlaylist($url, $synced_at);
     }
 
     /**

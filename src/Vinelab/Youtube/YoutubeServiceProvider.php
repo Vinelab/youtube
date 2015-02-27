@@ -8,6 +8,7 @@ use Vinelab\Youtube\Validators\VideoValidator;
 use Vinelab\Youtube\Validators\VideoResponseValidator;
 use Vinelab\Youtube\Validators\SearchResponseValidator;
 use Vinelab\Youtube\Validators\ChannelResponseValidator;
+use Vinelab\Youtube\Validators\PlaylistResponseValidator;
 
 class YoutubeServiceProvider extends ServiceProvider {
 
@@ -32,6 +33,7 @@ class YoutubeServiceProvider extends ServiceProvider {
                            App::make('Vinelab\Youtube\Contracts\ParserInterface'),
                            App::make('Vinelab\Youtube\Validators\VideoResponseValidator'),
                            App::make('Vinelab\Youtube\Validators\ChannelResponseValidator'),
+                           App::make('Vinelab\Youtube\Validators\PlaylistResponseValidator'),
                            App::make('Vinelab\Youtube\Validators\SearchResponseValidator'));
         });
 
@@ -47,13 +49,17 @@ class YoutubeServiceProvider extends ServiceProvider {
 
         $this->app->bind('Vinelab\Youtube\Contracts\ChannelInterface', 'Vinelab\Youtube\Channel');
 
+        $this->app->bind('Vinelab\Youtube\Contracts\PlaylistInterface', 'Vinelab\Youtube\Playlist');
+
         $this->app->bind('Vinelab\Youtube\Contracts\ParserInterface', 'Vinelab\Youtube\Parser');
 
         $this->app->bind('Vinelab\Youtube\Contracts\SynchronizerInterface', 'Vinelab\Youtube\Synchronizer');
 
         $this->app->bind('Vinelab\Youtube\Contracts\ParserInterface', function () {
             return new Parser(App::make('Vinelab\Youtube\Contracts\VideoInterface'),
-                              App::make('Vinelab\Youtube\Contracts\ChannelInterface'));
+                              App::make('Vinelab\Youtube\Contracts\ChannelInterface'),
+                              App::make('Vinelab\Youtube\Contracts\PlaylistInterface')
+            );
         });
 
         $this->app->bind('Vinelab\Youtube\Contracts\ManagerInterface', function () {
@@ -69,7 +75,7 @@ class YoutubeServiceProvider extends ServiceProvider {
 
     public function boot()
     {
-        $this->package('vinelab/youtube', 'Vinelab\Youtube');
+        $this->package('vinelab/youtube', 'Vinelab\Youtube'); // TODO: REMOVE THIS FOR L5
 
         $this->app->register('Vinelab\Http\HttpServiceProvider');
 
