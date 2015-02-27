@@ -1,5 +1,10 @@
 <?php namespace Vinelab\Youtube;
 
+/**
+ * @author Adib
+ * @author Mahmoud Zalt <mahmoud@vinelab.com>
+ */
+
 use Vinelab\Youtube\Contracts\ApiInterface;
 use Vinelab\Youtube\Contracts\ManagerInterface;
 use Vinelab\Youtube\Contracts\SynchronizerInterface;
@@ -65,11 +70,29 @@ class Manager implements ManagerInterface
      */
     public function videosForChannel($url, $synced_at = null)
     {
-        //parse the url and the return the channel id or name
+        //parse the url and then return the channel id or name
         $id_or_name = UrlParser::parseChannelUrl($url);
 
         return $this->api->channel($id_or_name, $synced_at);
     }
+
+
+    /**
+     * return the playlist's videos by id or by username.
+     *
+     * @param  string $id_or_name
+     * @param  date   $synced_at
+     *
+     * @return Vinelab\Youtube\Channel
+     */
+    public function videosForPlaylist($url, $synced_at = null)
+    {
+        //parse the url and then return the playlist id or name
+        $id_or_name = UrlParser::parsePlaylistUrl($url);
+
+        return $this->api->playlist($id_or_name, $synced_at);
+    }
+
 
     /**
      * Sync a resource (channel or video)
