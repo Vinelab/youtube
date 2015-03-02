@@ -16,7 +16,8 @@ class ParserTest extends TestCase {
         // $this->video = M::mock('Vinelab\Youtube\Contracts\VideoInterface');
         $this->mvideo = M::mock('Vinelab\Youtube\Contracts\VideoInterface');
         $this->mchannel = M::mock('Vinelab\Youtube\Contracts\ChannelInterface');
-        $this->parser = new Parser($this->mvideo, $this->mchannel);
+        $this->mplaylist = M::mock('Vinelab\Youtube\Contracts\PlaylistInterface');
+        $this->parser = new Parser($this->mvideo, $this->mchannel, $this->mplaylist);
     }
 
     //this is giving me an error that i'm unable to solve,

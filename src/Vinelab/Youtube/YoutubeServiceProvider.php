@@ -75,7 +75,9 @@ class YoutubeServiceProvider extends ServiceProvider {
 
     public function boot()
     {
-        $this->package('vinelab/youtube', 'Vinelab\Youtube'); // TODO: REMOVE THIS FOR L5
+        $this->publishes([
+            __DIR__.'/../../config/youtube.php' => config_path('youtube.php')
+        ]);
 
         $this->app->register('Vinelab\Http\HttpServiceProvider');
 

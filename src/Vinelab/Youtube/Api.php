@@ -108,7 +108,7 @@ class Api implements ApiInterface {
     ) {
         $this->config   = $config;
         $this->http_client = $http_client;
-        $configuration  = $this->config->get('Vinelab\Youtube::youtube');
+        $configuration  = $this->config->get('youtube');
 
         $this->key      = $configuration['key'];
         $this->uris     = $configuration['uri'];
