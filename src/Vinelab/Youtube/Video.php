@@ -61,7 +61,7 @@ class Video implements VideoInterface, ResourceInterface {
     public function fill($data)
     {
         $this->kind         = $data['kind'];
-        $this->id           = $data['id'];
+        $this->id           = ($data['kind'] == 'youtube#playlistItem') ? $data['snippet']->resourceId->videoId : $data['id'];
         $this->etag         = $data['etag'];
         $this->sync_enabled = (bool) isset($data['sync_enabled']) ? $data['sync_enabled'] : self::DEFAULT_SYNC_STATUS ;
         $this->synced_at    = date("Y-m-d\TH:i:sP");
