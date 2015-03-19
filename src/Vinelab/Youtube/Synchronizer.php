@@ -41,7 +41,7 @@ class Synchronizer implements SynchronizerInterface {
     /**
      * Sync the resources.
      *
-     * in case a resource(video, or channel) has been been deleted
+     * in case a resource(video or channel or playlist) has been been deleted
      * a 'IncompatibleParametersException' will be thrown
      * which means that the existing data and the new one are not
      * compatible(different kind) because if the resource has been deleted
@@ -57,7 +57,24 @@ class Synchronizer implements SynchronizerInterface {
         // getting the youtube related information from the resource (info such as 'youtube_id')
         $info = $resource->getYoutubeInfo();
 
-        // sync channels: Vinelab\Youtube\Channel
+        // sync playlist: Vinelab\Youtube\Playlist
+        if ($resource instanceof YoutubePlaylistInterface) {
+            $synced_at = (new \DateTime($resource->synced_at))->format('Y-m-d\TH:i:sP');
+
+            // make the online request
+            $response = $this->api->playlist($info['youtube_id'], $synced_at);
+
+            // if nothing returned, make another call but without the $synced_at param
+            if (count($response->videos->all()) == 0) {
+                $response = $this->api->playlist($info['youtube_id']);
+            }
+
+            // sync the channel with the new data
+            $this->setPlaylistData($response);
+
+            // sync the playlist videos videos that needs to be synced
+            return $this->syncVideos($resource, $response);
+        }
         if ($resource instanceof YoutubeChannelInterface) {
             $synced_at = (new \DateTime($resource->synced_at))->format('Y-m-d\TH:i:sP');
 
@@ -130,16 +147,26 @@ class Synchronizer implements SynchronizerInterface {
     }
 
     /**
+     * Sync the playlist without the videos
+     * @param Playlist $response
+     */
+    protected function setPlaylistData($response)
+    {
+        $this->data = $response;
+    }
+
+    /**
      * Sync the videos inside the channel
      *
-     * @param $request
-     * @param $response
+     * @param $request from our code
+     * @param $response from youtube
      *
      * @return \Vinelab\Youtube\VideoCollection
      */
     protected function syncVideos($request, $response)
     {
         $response_videos = $response->videos;
+
         $request_videos = $request->videos;
 
         // this will hold all the Video objects that needs to be returned
@@ -148,12 +175,16 @@ class Synchronizer implements SynchronizerInterface {
         foreach ($response_videos as $response_video) {
             foreach ($request_videos as $request_video) {
                 // if the youtube video id doesn't not exist locally (means it's a new video on youtube)
-                if ($this->are_different_videos($response_video, $request_video)) {
+                if ($this->are_different_videos($request_video, $response_video)) {
+
+                    var_dump($request_video->title, $response_video->snippet['title']);
+
                     // add the youtube video to the result
                     $results_holder->push($response_video);
                 } else {
+
                     // if the etag is the same (means video have not been updated locally or online)
-                    if ($this->is_modified($response_video, $request_video)) {
+                    if ($this->is_modified($request_video, $response_video)) {
                         // add the local video to the result
                         $results_holder->push($request_video);
                     } else {
@@ -171,24 +202,25 @@ class Synchronizer implements SynchronizerInterface {
 
 
     /**
-     * @param $video1
-     * @param $video2
+     * @param $request_video model from the client code
+     * @param $response_video model from youtube parsed internally in this package
      *
      * @return bool
      */
-    protected function are_different_videos($video1, $video2)
+    protected function are_different_videos($request_video, $response_video)
     {
-        return ($video1->id != $video2->id);
+        return ($request_video->getYoutubeInfo()['youtube_id'] != $response_video->getYoutubeInfo()['id']);
     }
 
     /**
-     * @param $video
+     * @param $request_video model from the client code
+     * @param $response_video model from youtube parsed internally in this package
      *
-     * @return mixed
+     * @return bool
      */
-    protected function is_modified($video1, $video2)
+    protected function is_modified($request_video, $response_video)
     {
-        return  $video1->etag == $video2->etag;
+        return $request_video->getYoutubeInfo()['etag'] == $response_video->getYoutubeInfo()['etag'];
     }
 
     /**

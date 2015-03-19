@@ -330,6 +330,7 @@ class Api implements ApiInterface {
      */
     public function playlist($id_or_name, $synced_at = null)
     {
+
         $playlist = $this->getPlaylistById($id_or_name);
 
         if (empty($playlist->items)) {
