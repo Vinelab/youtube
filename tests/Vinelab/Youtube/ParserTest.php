@@ -1,14 +1,14 @@
-<?php namespace Vinelab\Youtube\Tests;
+<?php
+
+namespace Vinelab\Youtube\Tests;
 
 use Mockery as M;
 use Vinelab\Youtube\Video;
 use Vinelab\Youtube\Parser;
-use Vinelab\Youtube\Contracts\VideoInterface;
-use Vinelab\Youtube\Contracts\ChannelInterface;
 use Vinelab\Youtube\tests\TestCase;
 
-class ParserTest extends TestCase {
-
+class ParserTest extends TestCase
+{
     public function setUp()
     {
         parent::setUp();

@@ -1,4 +1,6 @@
-<?php namespace Vinelab\Youtube\Tests;
+<?php
+
+namespace Vinelab\Youtube\Tests;
 
 use Illuminate\Support\Collection;
 use StdClass;
@@ -7,12 +9,10 @@ use Vinelab\Youtube\Video;
 use Vinelab\Youtube\Channel;
 use Vinelab\Youtube\Synchronizer;
 use Vinelab\Youtube\VideoCollection;
-use Vinelab\Youtube\Contracts\VideoInterface;
-use Vinelab\Youtube\Contracts\ChannelInterface;
 use Vinelab\Youtube\tests\TestCase;
 
-class SynchronizerTest extends TestCase {
-
+class SynchronizerTest extends TestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -69,7 +69,7 @@ class SynchronizerTest extends TestCase {
     }
 
     /**
-     * this function is used by the tests of the sync function
+     * this function is used by the tests of the sync function.
      *
      * @param null $request_video_1_id
      * @param null $request_video_1_etag
@@ -171,7 +171,7 @@ class SynchronizerTest extends TestCase {
         $response_channel_data->items = [$item];
 
         // initializing the channel maker, that will convert the above data into channel object
-        if (! $response_video_2_id) {
+        if (!$response_video_2_id) {
             $videos_collection = new VideoCollection([$response_video_1]);
         } else {
             $videos_collection = new VideoCollection([$response_video_1, $response_video_2]);
@@ -201,7 +201,7 @@ class SynchronizerTest extends TestCase {
         $request_video_2->shouldReceive('getYoutubeInfo')->andReturn(['youtube_id' => $request_video_2_id]);
 
         // creating chanel of the above videos
-        if (! $request_video_2_id) {
+        if (!$request_video_2_id) {
             $collection_1 = Collection::make([$request_video_1]);
         } else {
             $collection_1 = Collection::make([$request_video_1, $request_video_2]);
@@ -366,7 +366,7 @@ class SynchronizerTest extends TestCase {
     public function test_video_diff_with_two_different_etags()
     {
         $resource = M::mock(new \stdClass());
-        $resource->kind = "youtube#video";
+        $resource->kind = 'youtube#video';
         $id = new \stdClass();
         $id->kind = 'youtube#video';
         $id->videoId = 'video_id_1';
@@ -374,21 +374,21 @@ class SynchronizerTest extends TestCase {
         $resource->id = $id;
         $resource->etag = 'etag_1';
         $resource->sync_enabled = true;
-        $resource->synced_at    = date("Y-m-d\TH:i:sP");
+        $resource->synced_at = date("Y-m-d\TH:i:sP");
 
         $snippet = new \stdClass();
         $snippet->thumbnails = new \stdClass();
 
         $resource->snippet = $snippet;
         $resource->thumbnails = [
-            'default'   =>  [
-                'url'   =>  'example1',
+            'default' => [
+                'url' => 'example1',
             ],
-            'medium'   =>  [
-                'url'   =>  'example1',
+            'medium' => [
+                'url' => 'example1',
             ],
-            'high'   =>  [
-                'url'   =>  'example1',
+            'high' => [
+                'url' => 'example1',
             ],
         ];
 
@@ -396,7 +396,7 @@ class SynchronizerTest extends TestCase {
         $this->assertInstanceOf('Vinelab\Youtube\Video', $resource);
 
         $response = M::mock(new \stdClass());
-        $response->kind = "youtube#video";
+        $response->kind = 'youtube#video';
         $id = new \stdClass();
         $id->kind = 'youtube#video';
         $id->videoId = 'video_id_2';
@@ -404,21 +404,21 @@ class SynchronizerTest extends TestCase {
         $response->id = $id;
         $response->etag = 'etag_2';
         $response->sync_enabled = true;
-        $response->synced_at    = date("Y-m-d\TH:i:sP");
+        $response->synced_at = date("Y-m-d\TH:i:sP");
 
         $snippet = new \stdClass();
         $snippet->thumbnails = new \stdClass();
 
         $response->snippet = $snippet;
         $response->thumbnails = [
-            'default'   =>  [
-                'url'   =>  'example1',
+            'default' => [
+                'url' => 'example1',
             ],
-            'medium'   =>  [
-                'url'   =>  'example1',
+            'medium' => [
+                'url' => 'example1',
             ],
-            'high'   =>  [
-                'url'   =>  'example1',
+            'high' => [
+                'url' => 'example1',
             ],
         ];
 
@@ -432,7 +432,7 @@ class SynchronizerTest extends TestCase {
     public function test_video_diff_with_two_similar_etags()
     {
         $resource = M::mock(new \stdClass());
-        $resource->kind = "youtube#video";
+        $resource->kind = 'youtube#video';
         $id = new \stdClass();
         $id->kind = 'youtube#video';
         $id->videoId = 'video_id_1';
@@ -440,21 +440,21 @@ class SynchronizerTest extends TestCase {
         $resource->id = $id;
         $resource->etag = 'etag';
         $resource->sync_enabled = true;
-        $resource->synced_at    = date("Y-m-d\TH:i:sP");
+        $resource->synced_at = date("Y-m-d\TH:i:sP");
 
         $snippet = new \stdClass();
         $snippet->thumbnails = new \stdClass();
 
         $resource->snippet = $snippet;
         $resource->thumbnails = [
-            'default'   =>  [
-                'url'   =>  'example1',
+            'default' => [
+                'url' => 'example1',
             ],
-            'medium'   =>  [
-                'url'   =>  'example1',
+            'medium' => [
+                'url' => 'example1',
             ],
-            'high'   =>  [
-                'url'   =>  'example1',
+            'high' => [
+                'url' => 'example1',
             ],
         ];
 
@@ -462,7 +462,7 @@ class SynchronizerTest extends TestCase {
         $this->assertInstanceOf('Vinelab\Youtube\Video', $resource);
 
         $response = M::mock(new \stdClass());
-        $response->kind = "youtube#video";
+        $response->kind = 'youtube#video';
         $id = new \stdClass();
         $id->kind = 'youtube#video';
         $id->videoId = 'video_id_2';
@@ -470,21 +470,21 @@ class SynchronizerTest extends TestCase {
         $response->id = $id;
         $response->etag = 'etag';
         $response->sync_enabled = true;
-        $response->synced_at    = date("Y-m-d\TH:i:sP");
+        $response->synced_at = date("Y-m-d\TH:i:sP");
 
         $snippet = new \stdClass();
         $snippet->thumbnails = new \stdClass();
 
         $response->snippet = $snippet;
         $response->thumbnails = [
-            'default'   =>  [
-                'url'   =>  'example1',
+            'default' => [
+                'url' => 'example1',
             ],
-            'medium'   =>  [
-                'url'   =>  'example1',
+            'medium' => [
+                'url' => 'example1',
             ],
-            'high'   =>  [
-                'url'   =>  'example1',
+            'high' => [
+                'url' => 'example1',
             ],
         ];
 

@@ -1,6 +1,8 @@
-<?php namespace Vinelab\Youtube;
+<?php
 
-/**
+namespace Vinelab\Youtube;
+
+/*
  * @author Adib
  * @author Mahmoud Zalt <mahmoud@vinelab.com>
  */
@@ -17,75 +19,84 @@ use Vinelab\Youtube\Validators\VideoResponseValidator;
 use Vinelab\Youtube\Validators\ChannelResponseValidator;
 use Vinelab\Youtube\Validators\SearchResponseValidator;
 
-class Api implements ApiInterface {
-
-
+class Api implements ApiInterface
+{
     const TYPE_PLAYLIST = 'playlist';
 
     const TYPE_CHANNEL = 'channel';
 
     /**
-     * The api key
+     * The api key.
+     *
      * @var String
      */
     protected $key;
 
     /**
-     * The api URLs
+     * The api URLs.
+     *
      * @var Array
      */
     protected $uris = [];
 
     /**
-     * The configuration instance
+     * The configuration instance.
+     *
      * @var Illuminate\Config\Repository
      */
     protected $config;
 
     /**
      * The video instance.
+     *
      * @var Vinelab\Youtube\Contracts\VideoInterface
      */
     protected $video;
 
     /**
-     * The parser instance
+     * The parser instance.
+     *
      * @var Vinelab\Youtube\Contracts\ParserInterface
      */
     protected $parser;
 
     /**
-     * The video validator instance
+     * The video validator instance.
+     *
      * @var Vinelab\Youtube\Validators\VideoResponseValidator
      */
     protected $video_validator;
 
     /**
-     * The channel validator instance
+     * The channel validator instance.
+     *
      * @var Vinelab\Youtube\Validators\ChannelResponseValidator
      */
     protected $channel_validator;
 
     /**
-     * The playlist validator instance
+     * The playlist validator instance.
+     *
      * @var Vinelab\Youtube\Validators\PlaylistResponseValidator
      */
     protected $playlist_validator;
 
     /**
-     * The search validator instance
+     * The search validator instance.
+     *
      * @var Vinelab\Youtube\Validators\SearchResponseValidator
      */
     protected $search_validator;
 
     /**
-     * The HttpClient instance
+     * The HttpClient instance.
+     *
      * @var Vinelab\Http\Client
      */
     protected $http_client;
 
     /**
-     * Initialize the Youtube instance
+     * Initialize the Youtube instance.
      *
      * @param Config                                                $config
      * @param \Vinelab\Http\Client                                  $http_client
@@ -106,12 +117,12 @@ class Api implements ApiInterface {
         PlaylistResponseValidator $playlist_validator,
         SearchResponseValidator $search_validator
     ) {
-        $this->config   = $config;
+        $this->config = $config;
         $this->http_client = $http_client;
-        $configuration  = $this->config->get('youtube');
+        $configuration = $this->config->get('youtube');
 
-        $this->key      = $configuration['key'];
-        $this->uris     = $configuration['uri'];
+        $this->key = $configuration['key'];
+        $this->uris = $configuration['uri'];
 
         $this->video = $video;
         $this->parser = $parser;
@@ -122,9 +133,9 @@ class Api implements ApiInterface {
     }
 
     /**
-     * Get videos info
+     * Get videos info.
      *
-     * @param  string|array   $video_ids
+     * @param string|array $video_ids
      *
      * @return stdClass
      */
@@ -135,9 +146,9 @@ class Api implements ApiInterface {
 
         //set the parameters passed with the api call
         $params = [
-            'id'    => is_array($video_ids) ? implode(',', $video_ids) : $video_ids,
-            'key'   => $this->key,
-            'part'  => 'id, snippet',
+            'id' => is_array($video_ids) ? implode(',', $video_ids) : $video_ids,
+            'key' => $this->key,
+            'part' => 'id, snippet',
         ];
 
         // NOTE: When Debugging uncomment the code below to cache the response
@@ -165,13 +176,15 @@ class Api implements ApiInterface {
         //$response->items will always exist in the response. however, if the video
         //has been deleted, items would be empty. So, it would be valid to check if
         //it's empty before returning the result.
-        return (! empty($response->items)) ? $this->video->make($items) : null;
+        return (!empty($response->items)) ? $this->video->make($items) : null;
     }
 
     /**
      * check whether the given data has more pages.
-     * @param  string  $result
-     * @return boolean
+     *
+     * @param string $result
+     *
+     * @return bool
      */
     protected function hasMorePages($result)
     {
@@ -179,9 +192,11 @@ class Api implements ApiInterface {
     }
 
     /**
-     * return all channel's videos by channel id
-     * @param  string $channel_id
-     * @param  date   $published_after RFC 3339 formatted date-time value (1970-01-01T00:00:00Z)
+     * return all channel's videos by channel id.
+     *
+     * @param string $channel_id
+     * @param date   $published_after RFC 3339 formatted date-time value (1970-01-01T00:00:00Z)
+     *
      * @return array
      */
     public function searchChannelVideos($channel_id, $published_after = null)
@@ -208,9 +223,11 @@ class Api implements ApiInterface {
     }
 
     /**
-     * return all playlist's videos by playlist id
-     * @param  string $playlist_id
-     * @param  date   $published_after RFC 3339 formatted date-time value (1970-01-01T00:00:00Z)
+     * return all playlist's videos by playlist id.
+     *
+     * @param string $playlist_id
+     * @param date   $published_after RFC 3339 formatted date-time value (1970-01-01T00:00:00Z)
+     *
      * @return array
      */
     public function searchPlaylistVideos($playlist_id, $published_after = null)
@@ -236,16 +253,16 @@ class Api implements ApiInterface {
         return $pages;
     }
 
-
-
     /**
-     * get all videos related to a channel
-     * @param  string   $channel_id
-     * @param  string   $page
-     * @param  string   $q
-     * @param  integer  $max_result
-     * @param  string   $order
-     * @param  date     $published_after (format: "Y-m-d\TH:i:sP" RFC 3339)
+     * get all videos related to a channel.
+     *
+     * @param string $channel_id
+     * @param string $page
+     * @param string $q
+     * @param int    $max_result
+     * @param string $order
+     * @param date   $published_after (format: "Y-m-d\TH:i:sP" RFC 3339)
+     *
      * @return stdClass
      */
     public function searchChannelVideosForPage($channel_id, $page = null, $q = null, $max_result = 20, $order = 'date', $published_after = null)
@@ -253,28 +270,30 @@ class Api implements ApiInterface {
         $api_url = $this->uris['search.list'];
 
         $params = [
-            'q'                 =>  $q,
-            'type'              =>  'video',
-            'channelId'         =>  $channel_id,
-            'key'               =>  $this->key,
-            'part'              =>  'id, snippet',
-            'pageToken'         =>  $page,
-            'maxResults'        =>  $max_result,
-            'order'             =>  $order,
-            'publishedAfter'    =>  $published_after,
+            'q' => $q,
+            'type' => 'video',
+            'channelId' => $channel_id,
+            'key' => $this->key,
+            'part' => 'id, snippet',
+            'pageToken' => $page,
+            'maxResults' => $max_result,
+            'order' => $order,
+            'publishedAfter' => $published_after,
         ];
 
         return $this->get($api_url, $params);
     }
 
     /**
-     * get all videos related to a playlist
-     * @param  string   $playlist_id
-     * @param  string   $page
-     * @param  string   $q
-     * @param  integer  $max_result
-     * @param  string   $order
-     * @param  date     $published_after (format: "Y-m-d\TH:i:sP" RFC 3339)
+     * get all videos related to a playlist.
+     *
+     * @param string $playlist_id
+     * @param string $page
+     * @param string $q
+     * @param int    $max_result
+     * @param string $order
+     * @param date   $published_after (format: "Y-m-d\TH:i:sP" RFC 3339)
+     *
      * @return stdClass
      */
     public function searchPlaylistVideosForPage($playlist_id, $page = null, $q = null, $max_result = 20, $order = 'date', $published_after = null)
@@ -282,19 +301,18 @@ class Api implements ApiInterface {
         $api_url = $this->uris['playlistItems'];
 
         $params = [
-            'q'                 =>  $q,
-            'playlistId'        =>  $playlist_id,
-            'key'               =>  $this->key,
-            'part'              =>  'id, snippet',
-            'pageToken'         =>  $page,
-            'maxResults'        =>  $max_result,
-            'order'             =>  $order,
-            'publishedAfter'    =>  $published_after,
+            'q' => $q,
+            'playlistId' => $playlist_id,
+            'key' => $this->key,
+            'part' => 'id, snippet',
+            'pageToken' => $page,
+            'maxResults' => $max_result,
+            'order' => $order,
+            'publishedAfter' => $published_after,
         ];
 
         return $this->get($api_url, $params);
     }
-
 
     /**
      * @param string $id_or_name
@@ -321,7 +339,6 @@ class Api implements ApiInterface {
         return $parsed_videos;
     }
 
-
     /**
      * @param string $id_or_name
      * @param null   $synced_at
@@ -330,7 +347,6 @@ class Api implements ApiInterface {
      */
     public function playlist($id_or_name, $synced_at = null)
     {
-
         $playlist = $this->getPlaylistById($id_or_name);
 
         if (empty($playlist->items)) {
@@ -351,9 +367,9 @@ class Api implements ApiInterface {
     }
 
     /**
-     * return the playlist by ID
+     * return the playlist by ID.
      *
-     * @param  string   $username
+     * @param string $username
      *
      * @return stdClass
      */
@@ -364,9 +380,9 @@ class Api implements ApiInterface {
 
         //set the parameters passed with the api call
         $params = [
-            'id'        => $id,
-            'key'       => $this->key,
-            'part'      => 'id,snippet,contentDetails',
+            'id' => $id,
+            'key' => $this->key,
+            'part' => 'id,snippet,contentDetails',
         ];
 
         //make the api call
@@ -378,9 +394,9 @@ class Api implements ApiInterface {
     }
 
     /**
-     * return the playlist by Name
+     * return the playlist by Name.
      *
-     * @param  string   $username
+     * @param string $username
      *
      * @return stdClass
      */
@@ -391,9 +407,9 @@ class Api implements ApiInterface {
 
         //set the parameters passed with the api call
         $params = [
-            'forUsername'       => $username,
-            'key'               => $this->key,
-            'part'              => 'id,snippet,contentDetails',
+            'forUsername' => $username,
+            'key' => $this->key,
+            'part' => 'id,snippet,contentDetails',
         ];
 
         //make the api call
@@ -405,8 +421,10 @@ class Api implements ApiInterface {
     }
 
     /**
-     * return the channel by username
-     * @param  string   $username
+     * return the channel by username.
+     *
+     * @param string $username
+     *
      * @return stdClass
      */
     public function getChannelByName($username)
@@ -416,9 +434,9 @@ class Api implements ApiInterface {
 
         //set the parameters passed with the api call
         $params = [
-            'forUsername'   => $username,
-            'key'           => $this->key,
-            'part'          => 'id,snippet,contentDetails',
+            'forUsername' => $username,
+            'key' => $this->key,
+            'part' => 'id,snippet,contentDetails',
         ];
 
         //make the api call
@@ -429,8 +447,10 @@ class Api implements ApiInterface {
     }
 
     /**
-     * return the channel by ID
-     * @param  string   $username
+     * return the channel by ID.
+     *
+     * @param string $username
+     *
      * @return stdClass
      */
     public function getChannelById($id)
@@ -440,9 +460,9 @@ class Api implements ApiInterface {
 
         //set the parameters passed with the api call
         $params = [
-            'id'        => $id,
-            'key'       => $this->key,
-            'part'      => 'id,snippet,contentDetails',
+            'id' => $id,
+            'key' => $this->key,
+            'part' => 'id,snippet,contentDetails',
         ];
 
         //make the api call
@@ -453,9 +473,11 @@ class Api implements ApiInterface {
     }
 
     /**
-     * Make the api call
-     * @param  string   $url
-     * @param  array    $params
+     * Make the api call.
+     *
+     * @param string $url
+     * @param array  $params
+     *
      * @return stdClass
      */
     public function get($url, $params)

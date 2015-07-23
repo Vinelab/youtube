@@ -1,13 +1,17 @@
-<?php namespace Vinelab\Youtube\Contracts;
+<?php
+
+namespace Vinelab\Youtube\Contracts;
 
 use Vinelab\Youtube\VideoCollection;
 
-interface ChannelInterface {
-
+interface ChannelInterface
+{
     /**
      * Istantiate an instance of this class.
-     * @param  stdClass                        $channel_info
-     * @param  Vinelab\Youtube\VideoCollection $videos
+     *
+     * @param stdClass                        $channel_info
+     * @param Vinelab\Youtube\VideoCollection $videos
+     *
      * @return Vinelab\Youtube\Channel
      */
     public function make($channel_info, VideoCollection $videos);

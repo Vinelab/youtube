@@ -1,9 +1,11 @@
-<?php namespace Vinelab\Youtube\Validators;
+<?php
+
+namespace Vinelab\Youtube\Validators;
 
 use Vinelab\Youtube\Exceptions\InvalidVideoException;
 
-class VideoValidator extends Validator {
-
+class VideoValidator extends Validator
+{
     protected $rules = [
         'url' => 'required|url|max:255|youtube',
     ];
@@ -25,7 +27,7 @@ class VideoValidator extends Validator {
 
         $validation = $this->validation($attributes);
 
-        if (! $validation->passes()) {
+        if (!$validation->passes()) {
             throw new InvalidVideoException($validation->messages()->all());
         }
 

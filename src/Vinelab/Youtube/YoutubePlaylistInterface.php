@@ -1,6 +1,7 @@
-<?php namespace Vinelab\Youtube;
+<?php
 
+namespace Vinelab\Youtube;
 
-interface YoutubePlaylistInterface extends ResourceInterface {
-
+interface YoutubePlaylistInterface extends ResourceInterface
+{
 }

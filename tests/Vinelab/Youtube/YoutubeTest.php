@@ -1,11 +1,13 @@
-<?php namespace Vinelab\Youtube\Tests;
+<?php
+
+namespace Vinelab\Youtube\Tests;
 
 use Mockery as M;
 use Vinelab\Youtube\Youtube;
 use Vinelab\Youtube\tests\TestCase;
 
-class YoutubeTest extends TestCase {
-
+class YoutubeTest extends TestCase
+{
     public function setUp()
     {
         parent::setUp();

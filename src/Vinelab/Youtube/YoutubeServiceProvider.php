@@ -1,17 +1,15 @@
-<?php namespace Vinelab\Youtube;
+<?php
+
+namespace Vinelab\Youtube;
 
 use App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
-use Vinelab\Youtube\Contracts\ApiInterface;
 use Vinelab\Youtube\Validators\VideoValidator;
 use Vinelab\Youtube\Validators\VideoResponseValidator;
-use Vinelab\Youtube\Validators\SearchResponseValidator;
-use Vinelab\Youtube\Validators\ChannelResponseValidator;
-use Vinelab\Youtube\Validators\PlaylistResponseValidator;
 
-class YoutubeServiceProvider extends ServiceProvider {
-
+class YoutubeServiceProvider extends ServiceProvider
+{
     /**
      * Indicates if loading of the provider is deferred.
      *
@@ -21,8 +19,6 @@ class YoutubeServiceProvider extends ServiceProvider {
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register()
     {
@@ -76,7 +72,7 @@ class YoutubeServiceProvider extends ServiceProvider {
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../../config/youtube.php' => config_path('youtube.php')
+            __DIR__.'/../../config/youtube.php' => config_path('youtube.php'),
         ]);
 
         $this->app->register('Vinelab\Http\HttpServiceProvider');

@@ -1,20 +1,24 @@
-<?php namespace Vinelab\Youtube;
+<?php
+
+namespace Vinelab\Youtube;
 
 use Vinelab\Youtube\Contracts\ApiInterface;
 use Vinelab\Youtube\Contracts\ChannelInterface;
 use Vinelab\Youtube\Contracts\SynchronizerInterface;
 use Vinelab\Youtube\Exceptions\IncompatibleParametersException;
 
-class Synchronizer implements SynchronizerInterface {
-
+class Synchronizer implements SynchronizerInterface
+{
     /**
      * The api instance.
+     *
      * @var Vinelab\Youtube\Contracts\ApiInterface
      */
     protected $api;
 
     /**
-     * $the YoutubeChannelInterface instance
+     * $the YoutubeChannelInterface instance.
+     *
      * @var Vinelab\Youtube\Contracts\YoutubeChannelInterface
      */
     protected $channel;
@@ -23,12 +27,14 @@ class Synchronizer implements SynchronizerInterface {
      * $data will store all the data
      * after we sync the channels and
      * videos.
+     *
      * @var array
      */
     protected $data = [];
 
     /**
-     * Create a new instance of the VideoSynchroniser
+     * Create a new instance of the VideoSynchroniser.
+     *
      * @param ApiInterface     $api
      * @param ChannelInterface $channel
      */
@@ -50,6 +56,7 @@ class Synchronizer implements SynchronizerInterface {
      * @param \Vinelab\Youtube\ResourceInterface $resource
      *
      * @internal param \Vinelab\Youtube\ResourceInterface $existing_data
+     *
      * @return Channel|Video
      */
     public function sync($resource)
@@ -121,8 +128,10 @@ class Synchronizer implements SynchronizerInterface {
 
     /**
      * check if the video etags are different.
-     * @param  Vinelab\Youtube\Video $resource
-     * @param  Vinelab\Youtube\Video $response
+     *
+     * @param Vinelab\Youtube\Video $resource
+     * @param Vinelab\Youtube\Video $response
+     *
      * @return Boolean
      */
     protected function videoDiff($resource, $response)
@@ -138,7 +147,8 @@ class Synchronizer implements SynchronizerInterface {
     }
 
     /**
-     * Sync the channel without the videos
+     * Sync the channel without the videos.
+     *
      * @param Channel $response
      */
     protected function setChannelData($response)
@@ -147,7 +157,8 @@ class Synchronizer implements SynchronizerInterface {
     }
 
     /**
-     * Sync the playlist without the videos
+     * Sync the playlist without the videos.
+     *
      * @param Playlist $response
      */
     protected function setPlaylistData($response)
@@ -156,7 +167,7 @@ class Synchronizer implements SynchronizerInterface {
     }
 
     /**
-     * Sync the videos inside the channel
+     * Sync the videos inside the channel.
      *
      * @param $request from our code
      * @param $response from youtube
@@ -176,7 +187,6 @@ class Synchronizer implements SynchronizerInterface {
             foreach ($request_videos as $request_video) {
                 // if the youtube video id doesn't not exist locally (means it's a new video on youtube)
                 if ($this->are_different_videos($request_video, $response_video)) {
-
                     var_dump($request_video->title, $response_video->snippet['title']);
 
                     // add the youtube video to the result
@@ -199,7 +209,6 @@ class Synchronizer implements SynchronizerInterface {
 
         return $results_holder;
     }
-
 
     /**
      * @param $request_video model from the client code
@@ -234,9 +243,11 @@ class Synchronizer implements SynchronizerInterface {
     }
 
     /**
-     * return the value of sync_enabled
-     * @param  Channel|Video $data
-     * @return boolean
+     * return the value of sync_enabled.
+     *
+     * @param Channel|Video $data
+     *
+     * @return bool
      */
     protected function syncable($data)
     {
@@ -244,7 +255,8 @@ class Synchronizer implements SynchronizerInterface {
     }
 
     /**
-     * return the youtube channel if
+     * return the youtube channel if.
+     *
      * @return interger
      */
     public function getYoutubeId()

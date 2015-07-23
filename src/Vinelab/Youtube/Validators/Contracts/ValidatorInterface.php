@@ -1,6 +1,8 @@
-<?php namespace Vinelab\Youtube\Validators\Contracts;
+<?php
 
-interface ValidatorInterface {
+namespace Vinelab\Youtube\Validators\Contracts;
 
+interface ValidatorInterface
+{
     public function validate($attributes);
 }

@@ -1,9 +1,11 @@
-<?php namespace Vinelab\Youtube\Validators;
+<?php
+
+namespace Vinelab\Youtube\Validators;
 
 use Illuminate\Validation\Factory as ValidatorFactory;
 
-abstract class Validator implements Contracts\ValidatorInterface {
-
+abstract class Validator implements Contracts\ValidatorInterface
+{
     /**
      * The validator instance.
      *
@@ -36,10 +38,12 @@ abstract class Validator implements Contracts\ValidatorInterface {
     abstract public function validate($attributes);
 
     /**
-     * check if the keys in the reponse are valid
-     * @param  array   $attributes
-     * @param  array   $expected
-     * @return boolean
+     * check if the keys in the reponse are valid.
+     *
+     * @param array $attributes
+     * @param array $expected
+     *
+     * @return bool
      */
     protected function expectedKeys($attributes, $expected)
     {
@@ -50,9 +54,11 @@ abstract class Validator implements Contracts\ValidatorInterface {
     }
 
     /**
-     * Recursively check the key intersections of two arrays
-     * @param  array $attributes
-     * @param  array $expected
+     * Recursively check the key intersections of two arrays.
+     *
+     * @param array $attributes
+     * @param array $expected
+     *
      * @return array
      */
     protected function intersect(array $attributes, array $expected)
@@ -71,7 +77,9 @@ abstract class Validator implements Contracts\ValidatorInterface {
      * Convert an StdClass to an array.
      * recursively loop through all sub objects
      * if they exist and convert them as well.
-     * @param  StdClass $obj
+     *
+     * @param StdClass $obj
+     *
      * @return array
      */
     protected function objectToArray($obj)

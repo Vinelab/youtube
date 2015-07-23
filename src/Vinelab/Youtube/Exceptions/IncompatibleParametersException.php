@@ -1,5 +1,7 @@
-<?php namespace Vinelab\Youtube\Exceptions;
+<?php
 
-class IncompatibleParametersException extends VideoException {
+namespace Vinelab\Youtube\Exceptions;
 
+class IncompatibleParametersException extends VideoException
+{
 }

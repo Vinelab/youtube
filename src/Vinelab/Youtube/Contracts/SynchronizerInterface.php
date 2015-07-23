@@ -1,7 +1,9 @@
-<?php namespace Vinelab\Youtube\Contracts;
+<?php
 
-interface SynchronizerInterface {
+namespace Vinelab\Youtube\Contracts;
 
+interface SynchronizerInterface
+{
     /**
      * Sync the resources.
      *

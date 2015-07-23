@@ -1,26 +1,30 @@
-<?php namespace Vinelab\Youtube;
+<?php
+
+namespace Vinelab\Youtube;
 
 use Vinelab\Youtube\Contracts\PlaylistInterface;
 use Vinelab\Youtube\Contracts\VideoInterface;
 use Vinelab\Youtube\Contracts\ChannelInterface;
 use Vinelab\Youtube\Contracts\ParserInterface;
 
-class Parser implements ParserInterface {
-
+class Parser implements ParserInterface
+{
     /**
-     * The videoInterface instance
+     * The videoInterface instance.
+     *
      * @var Vinelab\Youtube\Contracts\VideoInterface
      */
     protected $video;
 
     /**
-     * Then ChannelInterface instance
+     * Then ChannelInterface instance.
+     *
      * @var Vinelab\Youtube\Contracts\ChannelInterface
      */
     protected $channel;
 
     /**
-     * Create a new Parser instance
+     * Create a new Parser instance.
      *
      * @param \Vinelab\Youtube\Contracts\VideoInterface    $video
      * @param \Vinelab\Youtube\Contracts\ChannelInterface  $channel
@@ -39,28 +43,28 @@ class Parser implements ParserInterface {
     /**
      * Parse the given video and channel pr playlist data.
      *
-     * @param  array                   $video_pages
-     * @param  array                   $kind
+     * @param array $video_pages
+     * @param array $kind
      *
      * @return Vinelab\Youtube\Channel|Vinelab\Youtube\Playlist
      */
     public function parse($video_pages, $kind, $type = 'channel')
     {
-        if($type == 'channel'){
+        if ($type == 'channel') {
             return $this->parseChannel($video_pages, $kind);
         }
-        if($type == 'playlist'){
+        if ($type == 'playlist') {
             return $this->parsePlaylist($video_pages, $kind);
         }
 
-        return null;
+        return;
     }
 
     /**
      * Parse the given video and channel data.
      *
-     * @param  array                   $video_pages
-     * @param  array                   $channel
+     * @param array $video_pages
+     * @param array $channel
      *
      * @return Vinelab\Youtube\Channel
      */
@@ -82,8 +86,8 @@ class Parser implements ParserInterface {
     /**
      * Parse the given video and playlist data.
      *
-     * @param  array                   $video_pages
-     * @param  array                   $playlist
+     * @param array $video_pages
+     * @param array $playlist
      *
      * @return Vinelab\Youtube\Playlist
      */
@@ -101,5 +105,4 @@ class Parser implements ParserInterface {
         //return a new channel with the new data.
         return $this->playlist->make($playlist, $videos);
     }
-
 }

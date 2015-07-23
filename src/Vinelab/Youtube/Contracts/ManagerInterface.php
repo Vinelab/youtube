@@ -1,27 +1,35 @@
-<?php namespace Vinelab\Youtube\Contracts;
+<?php
+
+namespace Vinelab\Youtube\Contracts;
 
 use Vinelab\Youtube\ResourceInterface;
 
-interface ManagerInterface {
-
+interface ManagerInterface
+{
     /**
-     * Return a videos info
+     * Return a videos info.
+     *
      * @param string|array $urls
+     *
      * @return \Vinelab\Youtube\Contracts\Vinelab\Youtube\YoutubeVideo
      */
     public function videos($vid);
 
     /**
      * return the channel's videos by id or by username.
-     * @param  string                  $id_or_name
-     * @param  date                    $synced_at
+     *
+     * @param string $id_or_name
+     * @param date   $synced_at
+     *
      * @return Vinelab\Youtube\Channel
      */
     public function videosForChannel($id_or_name, $synced_at = null);
 
     /**
-     * Sync a resource (channel or video)
-     * @param  ResourceInterface $resource
+     * Sync a resource (channel or video).
+     *
+     * @param ResourceInterface $resource
+     *
      * @return Channel|Video
      */
     public function sync(ResourceInterface $resource);

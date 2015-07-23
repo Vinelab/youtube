@@ -1,12 +1,14 @@
-<?php namespace Vinelab\Youtube\Validators;
+<?php
+
+namespace Vinelab\Youtube\Validators;
 
 use Vinelab\Youtube\Exceptions\InvalidResponseException;
 
-class SearchResponseValidator extends Validator {
-
+class SearchResponseValidator extends Validator
+{
     protected $rules = [
-        'kind'  =>  'required',
-        'etag'  =>  'required',
+        'kind' => 'required',
+        'etag' => 'required',
     ];
 
     public function validate($attributes)
@@ -14,12 +16,12 @@ class SearchResponseValidator extends Validator {
         // convert the StdObj to array
         $attributes = $this->objectToArray($attributes);
 
-        /**
+        /*
          * check if the converted object has the same keys
          * as the expected response from youtube.
          * if not, throw InvalidResponseException.
          */
-        if (! $this->expectedKeys($attributes, ExpectedYoutubeResponse::search())) {
+        if (!$this->expectedKeys($attributes, ExpectedYoutubeResponse::search())) {
             throw new InvalidResponseException();
         }
 

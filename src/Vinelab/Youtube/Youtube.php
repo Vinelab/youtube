@@ -1,6 +1,8 @@
-<?php namespace Vinelab\Youtube;
+<?php
 
-/**
+namespace Vinelab\Youtube;
+
+/*
  * @author Adib
  * @author Mahmoud Zalt <mahmoud@vinelab.com>
  */
@@ -10,15 +12,15 @@ use Vinelab\Youtube\Contracts\YoutubeInterface;
 
 class Youtube implements YoutubeInterface
 {
-
     /**
-     * The manager instance
+     * The manager instance.
+     *
      * @var Vinelab\Youtube\Contracts\ManagerInterface
      */
     protected $manager;
 
     /**
-     * Create a new instance of Youtube
+     * Create a new instance of Youtube.
      *
      * @param ManagerInterface $manager
      */
@@ -28,9 +30,9 @@ class Youtube implements YoutubeInterface
     }
 
     /**
-     * return a videos info
+     * return a videos info.
      *
-     * @param  array $urls
+     * @param array $urls
      *
      * @return Vinelab\Youtube\Video
      */
@@ -40,9 +42,9 @@ class Youtube implements YoutubeInterface
     }
 
     /**
-     * return a single video info
+     * return a single video info.
      *
-     * @param  string $url
+     * @param string $url
      *
      * @return Vinelab\Youtube\Video
      */
@@ -52,10 +54,10 @@ class Youtube implements YoutubeInterface
     }
 
     /**
-     * return a channel with its videos
+     * return a channel with its videos.
      *
-     * @param  string $url
-     * @param  date   $synced_at
+     * @param string $url
+     * @param date   $synced_at
      *
      * @return Vinelab\Youtube\Channel
      */
@@ -65,10 +67,10 @@ class Youtube implements YoutubeInterface
     }
 
     /**
-     * return a playlist with its videos
+     * return a playlist with its videos.
      *
-     * @param  string $url
-     * @param  date   $synced_at
+     * @param string $url
+     * @param date   $synced_at
      *
      * @return Vinelab\Youtube\Playlist
      */
@@ -78,9 +80,9 @@ class Youtube implements YoutubeInterface
     }
 
     /**
-     * sync the resource
+     * sync the resource.
      *
-     * @param  Video|Channel $resource
+     * @param Video|Channel $resource
      *
      * @return Video|Channel
      */

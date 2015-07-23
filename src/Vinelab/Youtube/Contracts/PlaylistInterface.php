@@ -1,14 +1,16 @@
-<?php namespace Vinelab\Youtube\Contracts;
+<?php
+
+namespace Vinelab\Youtube\Contracts;
 
 use Vinelab\Youtube\VideoCollection;
 
-interface PlaylistInterface {
-
+interface PlaylistInterface
+{
     /**
      * Istantiate an instance of this class.
      *
-     * @param  stdClass                        $playlist_info
-     * @param  Vinelab\Youtube\VideoCollection $videos
+     * @param stdClass                        $playlist_info
+     * @param Vinelab\Youtube\VideoCollection $videos
      *
      * @return Vinelab\Youtube\playlist
      */

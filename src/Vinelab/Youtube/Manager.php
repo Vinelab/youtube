@@ -1,6 +1,8 @@
-<?php namespace Vinelab\Youtube;
+<?php
 
-/**
+namespace Vinelab\Youtube;
+
+/*
  * @author Adib
  * @author Mahmoud Zalt <mahmoud@vinelab.com>
  */
@@ -13,21 +15,22 @@ use Vinelab\Youtube\Helpers\YoutubeUrlParser as UrlParser;
 
 class Manager implements ManagerInterface
 {
-
     /**
      * The api instance.
+     *
      * @var Vinelab\Youtube\Contracts\ApiInterface
      */
     protected $api;
 
     /**
-     * The synchronizer instance
+     * The synchronizer instance.
+     *
      * @var Vinelab\Youtube\Contracts\SynchronizerInterface
      */
     protected $synchronizer;
 
     /**
-     * Create a new Manager instance
+     * Create a new Manager instance.
      *
      * @param ApiInterface          $youtube
      * @param SynchronizerInterface $synchronizer
@@ -41,7 +44,7 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * Return a videos info
+     * Return a videos info.
      *
      * @param string|array $urls
      *
@@ -49,7 +52,7 @@ class Manager implements ManagerInterface
      */
     public function videos($urls)
     {
-        if (! is_array($urls)) {
+        if (!is_array($urls)) {
             return $this->api->video(UrlParser::parseId($urls));
         }
         // if array parse each url
@@ -63,8 +66,8 @@ class Manager implements ManagerInterface
     /**
      * return the channel's videos by id or by username.
      *
-     * @param  string $id_or_name
-     * @param  date   $synced_at
+     * @param string $id_or_name
+     * @param date   $synced_at
      *
      * @return Vinelab\Youtube\Channel
      */
@@ -76,12 +79,11 @@ class Manager implements ManagerInterface
         return $this->api->channel($id_or_name, $synced_at);
     }
 
-
     /**
      * return the playlist's videos by id or by username.
      *
-     * @param  string $id_or_name
-     * @param  date   $synced_at
+     * @param string $id_or_name
+     * @param date   $synced_at
      *
      * @return Vinelab\Youtube\Channel
      */
@@ -93,11 +95,10 @@ class Manager implements ManagerInterface
         return $this->api->playlist($id_or_name, $synced_at);
     }
 
-
     /**
-     * Sync a resource (channel or video)
+     * Sync a resource (channel or video).
      *
-     * @param  ResourceInterface $resource
+     * @param ResourceInterface $resource
      *
      * @return Channel|Video
      */
@@ -111,9 +112,9 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * return the type of object
+     * return the type of object.
      *
-     * @param  Object $object
+     * @param Object $object
      *
      * @return string
      */
@@ -132,7 +133,7 @@ class Manager implements ManagerInterface
     public function prepareUrl($url)
     {
         if (!preg_match('/http[s]?:\/\//', $url, $matches)) {
-            $url = 'http://' . $url;
+            $url = 'http://'.$url;
 
             return $url;
         }
@@ -141,9 +142,9 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * Return a video info
+     * Return a video info.
      *
-     * @param  string $vid
+     * @param string $vid
      *
      * @return Vinelab\Youtube\Video
      */

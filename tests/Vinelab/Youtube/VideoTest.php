@@ -1,10 +1,12 @@
-<?php namespace Vinelab\Youtube\Tests;
+<?php
+
+namespace Vinelab\Youtube\Tests;
 
 use Mockery as M;
 use Vinelab\Youtube\Video;
 
-class VideoTest extends TestCase {
-
+class VideoTest extends TestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -14,7 +16,7 @@ class VideoTest extends TestCase {
     public function test_make_video_using_fillFromSearch()
     {
         $response = M::mock(new \stdClass());
-        $response->kind = "youtube#searchResult";
+        $response->kind = 'youtube#searchResult';
         $id = new \stdClass();
         $id->kind = '';
         $id->videoId = '';
@@ -22,21 +24,21 @@ class VideoTest extends TestCase {
         $response->id = $id;
         $response->etag = 'etag';
         $response->sync_enabled = true;
-        $response->synced_at    = date("Y-m-d\TH:i:sP");
+        $response->synced_at = date("Y-m-d\TH:i:sP");
 
         $snippet = new \stdClass();
         $snippet->thumbnails = new \stdClass();
 
         $response->snippet = $snippet;
         $response->thumbnails = [
-                        'default'   =>  [
-                            'url'   =>  'example',
+                        'default' => [
+                            'url' => 'example',
                         ],
-                        'medium'   =>  [
-                            'url'   =>  'example',
+                        'medium' => [
+                            'url' => 'example',
                         ],
-                        'high'   =>  [
-                            'url'   =>  'example',
+                        'high' => [
+                            'url' => 'example',
                         ],
                     ];
 
@@ -47,7 +49,7 @@ class VideoTest extends TestCase {
     public function test_make_video_using_fill()
     {
         $response = M::mock(new \stdClass());
-        $response->kind = "youtube#video";
+        $response->kind = 'youtube#video';
         $id = new \stdClass();
         $id->kind = '';
         $id->videoId = '';
@@ -55,21 +57,21 @@ class VideoTest extends TestCase {
         $response->id = $id;
         $response->etag = 'etag';
         $response->sync_enabled = true;
-        $response->synced_at    = date("Y-m-d\TH:i:sP");
+        $response->synced_at = date("Y-m-d\TH:i:sP");
 
         $snippet = new \stdClass();
         $snippet->thumbnails = new \stdClass();
 
         $response->snippet = $snippet;
         $response->thumbnails = [
-                        'default'   =>  [
-                            'url'   =>  'example',
+                        'default' => [
+                            'url' => 'example',
                         ],
-                        'medium'   =>  [
-                            'url'   =>  'example',
+                        'medium' => [
+                            'url' => 'example',
                         ],
-                        'high'   =>  [
-                            'url'   =>  'example',
+                        'high' => [
+                            'url' => 'example',
                         ],
                     ];
 
@@ -80,25 +82,25 @@ class VideoTest extends TestCase {
     public function test_url()
     {
         $response = M::mock(new \stdClass());
-        $response->kind = "youtube#video";
+        $response->kind = 'youtube#video';
         $response->id = 'KKNxOTJES1U';
         $response->etag = 'etag';
         $response->sync_enabled = true;
-        $response->synced_at    = date("Y-m-d\TH:i:sP");
+        $response->synced_at = date("Y-m-d\TH:i:sP");
 
         $snippet = new \stdClass();
         $snippet->thumbnails = new \stdClass();
 
         $response->snippet = $snippet;
         $response->thumbnails = [
-                        'default'   =>  [
-                            'url'   =>  'example',
+                        'default' => [
+                            'url' => 'example',
                         ],
-                        'medium'   =>  [
-                            'url'   =>  'example',
+                        'medium' => [
+                            'url' => 'example',
                         ],
-                        'high'   =>  [
-                            'url'   =>  'example',
+                        'high' => [
+                            'url' => 'example',
                         ],
                     ];
 

@@ -1,12 +1,14 @@
-<?php namespace Vinelab\Youtube\Tests;
+<?php
+
+namespace Vinelab\Youtube\Tests;
 
 use Mockery as M;
 use Vinelab\Youtube\Channel;
 use Vinelab\Youtube\VideoCollection;
 use Vinelab\Youtube\tests\TestCase;
 
-class ChannelTest extends TestCase {
-
+class ChannelTest extends TestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -202,20 +204,20 @@ class ChannelTest extends TestCase {
 
         // @todo this is working. check how to allow for mocking in this case.
         $relatedPlaylists = new \stdClass();
-        $relatedPlaylists->likes        = 'LLBsKiXTgZrg0tqz4yz_R5Tw';
-        $relatedPlaylists->favorites    = 'FLBsKiXTgZrg0tqz4yz_R5Tw';
-        $relatedPlaylists->uploads      = 'UUBsKiXTgZrg0tqz4yz_R5Tw';
+        $relatedPlaylists->likes = 'LLBsKiXTgZrg0tqz4yz_R5Tw';
+        $relatedPlaylists->favorites = 'FLBsKiXTgZrg0tqz4yz_R5Tw';
+        $relatedPlaylists->uploads = 'UUBsKiXTgZrg0tqz4yz_R5Tw';
 
         $content_details = [
-            'relatedPlaylists'  =>  $relatedPlaylists,
-            'googlePlusUserId'  =>  '113619238331121062947',
+            'relatedPlaylists' => $relatedPlaylists,
+            'googlePlusUserId' => '113619238331121062947',
         ];
 
         $expected = [
             'relatedPlaylists' => [
-                'likes'     =>  'LLBsKiXTgZrg0tqz4yz_R5Tw',
-                'favorites' =>  'FLBsKiXTgZrg0tqz4yz_R5Tw',
-                'uploads'   =>  'UUBsKiXTgZrg0tqz4yz_R5Tw',
+                'likes' => 'LLBsKiXTgZrg0tqz4yz_R5Tw',
+                'favorites' => 'FLBsKiXTgZrg0tqz4yz_R5Tw',
+                'uploads' => 'UUBsKiXTgZrg0tqz4yz_R5Tw',
             ],
             'googlePlusUserId' => '113619238331121062947',
         ];
